@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nature Innovation</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html {
+            background: #000000;
         }
 
         body {
@@ -584,6 +589,334 @@
             margin-top: 14px;
         }
 
+        /* ===== ปุ่มแผนที่ (แถบยาวในหน้าเลือกภาค) ===== */
+        .map-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            width: 100%;
+            margin-bottom: 16px;
+            background: linear-gradient(to right, rgba(106, 159, 78, 0.25), rgba(255, 255, 255, 0.05));
+            border-color: rgba(139, 195, 74, 0.35);
+        }
+
+        .map-card .icon {
+            margin-bottom: 0;
+            font-size: 2.4rem;
+        }
+
+        .map-card .arrow {
+            margin-left: auto;
+            font-size: 1.5rem;
+            color: #aed581;
+            transition: transform 0.25s;
+        }
+
+        .map-card:hover .arrow {
+            transform: translateX(6px);
+        }
+
+        /* ===== หน้าแผนที่ ===== */
+        .map-wrap {
+            width: 100%;
+            max-width: 1300px;
+        }
+
+        .map-top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .map-top .back-btn {
+            margin-bottom: 0;
+        }
+
+        .map-crumb {
+            font-weight: 300;
+            color: #c8e6c9;
+        }
+
+        .map-crumb button {
+            font-family: inherit;
+            font-size: 1rem;
+            color: #aed581;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .map-crumb .current {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* สองกรอบ: แผนที่ซ้าย ข้อมูลขวา (ตอนแรกมีแค่แผนที่) */
+        .map-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 0fr);
+            gap: 0;
+            align-items: start;
+            transition: grid-template-columns 0.6s ease, gap 0.6s ease;
+        }
+
+        .map-layout.split {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 20px;
+        }
+
+        .map-pane {
+            position: sticky;
+            top: 20px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(200, 230, 201, 0.15);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        #map {
+            height: 75vh;
+            min-height: 420px;
+            background: #0b1a10;
+        }
+
+        .info-pane {
+            min-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+        }
+
+        .map-layout.split .info-pane {
+            opacity: 1;
+            transform: translateX(0);
+            overflow: visible;
+        }
+
+        /* แผงควบคุมลอยบนแผนที่ */
+        .map-overlay {
+            position: absolute;
+            top: 14px;
+            left: 60px;
+            right: 14px;
+            z-index: 500;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .map-overlay > * {
+            pointer-events: auto;
+        }
+
+        .map-hint {
+            font-size: 0.9rem;
+            color: #e8f5e9;
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid rgba(200, 230, 201, 0.2);
+            border-radius: 50px;
+            padding: 8px 16px;
+            backdrop-filter: blur(6px);
+        }
+
+        .map-select {
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: #e8f5e9;
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid rgba(200, 230, 201, 0.25);
+            border-radius: 50px;
+            padding: 8px 14px;
+            max-width: 220px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .map-select option {
+            background: #10261a;
+        }
+
+        .map-overlay .skip-btn {
+            padding: 8px 18px;
+        }
+
+        .legend {
+            position: absolute;
+            left: 14px;
+            bottom: 24px;
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid rgba(200, 230, 201, 0.2);
+            border-radius: 14px;
+            padding: 10px 14px;
+            backdrop-filter: blur(6px);
+        }
+
+        .legend:empty {
+            display: none;
+        }
+
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend i {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .map-loading {
+            position: absolute;
+            inset: 0;
+            z-index: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.55);
+            text-align: center;
+        }
+
+        .map-loading.hidden {
+            display: none;
+        }
+
+        /* หมุดลูกศรบนแผนที่ */
+        .pin-wrap {
+            background: none;
+            border: none;
+        }
+
+        .pin {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: var(--c);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .pin::after {
+            content: "";
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            width: 40%;
+            height: 40%;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .pin-wrap:hover .pin {
+            transform: rotate(-45deg) scale(1.2);
+        }
+
+        .pin-wrap.selected .pin {
+            transform: rotate(-45deg) scale(1.4);
+            border-color: #ffffff;
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.25), 0 6px 14px rgba(0, 0, 0, 0.7);
+        }
+
+        .leaflet-tooltip.map-tip {
+            font-family: "Prompt", sans-serif;
+            color: #e8f5e9;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(200, 230, 201, 0.25);
+            border-radius: 10px;
+            box-shadow: none;
+        }
+
+        .leaflet-tooltip.map-tip::before {
+            display: none;
+        }
+
+        .leaflet-container {
+            font-family: "Prompt", sans-serif;
+        }
+
+        /* หน้าต่างข้อมูลแบบกะทัดรัด (ตอนอยู่ข้างแผนที่) */
+        .window.compact .window-body {
+            grid-template-columns: 1fr;
+            min-height: 0;
+        }
+
+        .window.compact .sidebar {
+            flex-direction: row;
+            overflow-x: auto;
+            padding: 12px;
+            border-right: none;
+            border-bottom: 1px solid rgba(200, 230, 201, 0.1);
+        }
+
+        .window.compact .menu-item {
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .window.compact .menu-item.active::before {
+            left: 20%;
+            top: auto;
+            bottom: 0;
+            width: 60%;
+            height: 3px;
+        }
+
+        .window.compact .content {
+            padding: 22px 22px;
+        }
+
+        .window.compact .forecast {
+            grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+        }
+
+        /* แผนที่บนจอเล็ก: ข้อมูลขึ้นใต้แผนที่ */
+        @media (max-width: 860px) {
+            .map-layout,
+            .map-layout.split {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .info-pane {
+                display: none;
+            }
+
+            .map-layout.split .info-pane {
+                display: block;
+            }
+
+            .map-pane {
+                position: relative;
+                top: 0;
+            }
+
+            #map {
+                height: 55vh;
+                min-height: 320px;
+            }
+
+            .map-overlay {
+                left: 56px;
+            }
+        }
+
         /* มือถือ: เมนูย้ายไปด้านบนเป็นแถวเลื่อนได้ */
         @media (max-width: 760px) {
             .window-body {
@@ -631,7 +964,17 @@
         <div class="panel">
             <button class="back-btn" id="regionBack">← กลับหน้าแรก</button>
             <h2>เลือกภูมิภาค</h2>
-            <p class="subtitle">เลือกภาคที่ต้องการดูข้อมูล</p>
+            <p class="subtitle">เลือกภาคที่ต้องการดูข้อมูล หรือเลือกจากแผนที่</p>
+
+            <button class="card map-card" id="mapEntry">
+                <div class="icon">🗺️</div>
+                <div>
+                    <div class="name">เลือกจากแผนที่ประเทศไทย</div>
+                    <div class="count">กดหมุดบนแผนที่เพื่อเลือกจังหวัด อำเภอ และตำบล</div>
+                </div>
+                <div class="arrow">→</div>
+            </button>
+
             <div class="grid" id="regionGrid"></div>
         </div>
     </section>
@@ -649,12 +992,36 @@
         </div>
     </section>
 
+    <!-- หน้าแผนที่ -->
+    <section id="mapScreen" class="screen">
+        <div class="map-wrap">
+            <div class="map-top">
+                <button class="back-btn" id="mapBack">← ย้อนกลับ</button>
+                <div class="map-crumb" id="mapCrumb"></div>
+            </div>
+
+            <div class="map-layout" id="mapLayout">
+                <div class="map-pane">
+                    <div id="map"></div>
+                    <div class="map-overlay">
+                        <div class="map-hint" id="mapHint"></div>
+                        <select class="map-select" id="mapSelect"></select>
+                        <button class="skip-btn" id="mapSkip"></button>
+                    </div>
+                    <div class="legend" id="mapLegend"></div>
+                    <div class="map-loading" id="mapLoading"></div>
+                </div>
+                <div class="info-pane" id="infoPane"></div>
+            </div>
+        </div>
+    </section>
+
     <!-- หน้าต่างข้อมูล -->
     <section id="resultScreen" class="screen">
-        <div class="panel wide">
+        <div class="panel wide" id="resultPanel">
             <button class="back-btn" id="resultBack">← ย้อนกลับ</button>
 
-            <div class="window">
+            <div class="window" id="infoWindow">
                 <div class="window-header">
                     <div>
                         <h2 id="provinceTitle"></h2>
@@ -671,25 +1038,26 @@
         </div>
     </section>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // =========================================================
         // 1) ข้อมูลภูมิภาคและจังหวัด (77 จังหวัด)
         // =========================================================
         const regions = [
             {
-                key: "north", name: "ภาคเหนือ", icon: "⛰️",
+                key: "north", color: "#66bb6a", name: "ภาคเหนือ", icon: "⛰️",
                 provinces: ["เชียงราย", "เชียงใหม่", "น่าน", "พะเยา", "แพร่",
                             "แม่ฮ่องสอน", "ลำปาง", "ลำพูน", "อุตรดิตถ์"]
             },
             {
-                key: "northeast", name: "ภาคตะวันออกเฉียงเหนือ", icon: "🌾",
+                key: "northeast", color: "#ffca28", name: "ภาคตะวันออกเฉียงเหนือ", icon: "🌾",
                 provinces: ["กาฬสินธุ์", "ขอนแก่น", "ชัยภูมิ", "นครพนม", "นครราชสีมา",
                             "บึงกาฬ", "บุรีรัมย์", "มหาสารคาม", "มุกดาหาร", "ยโสธร",
                             "ร้อยเอ็ด", "เลย", "ศรีสะเกษ", "สกลนคร", "สุรินทร์",
                             "หนองคาย", "หนองบัวลำภู", "อำนาจเจริญ", "อุดรธานี", "อุบลราชธานี"]
             },
             {
-                key: "central", name: "ภาคกลาง", icon: "🏞️",
+                key: "central", color: "#42a5f5", name: "ภาคกลาง", icon: "🏞️",
                 provinces: ["กรุงเทพมหานคร", "กำแพงเพชร", "ชัยนาท", "นครนายก", "นครปฐม",
                             "นครสวรรค์", "นนทบุรี", "ปทุมธานี", "พระนครศรีอยุธยา", "พิจิตร",
                             "พิษณุโลก", "เพชรบูรณ์", "ลพบุรี", "สมุทรปราการ", "สมุทรสงคราม",
@@ -697,16 +1065,16 @@
                             "อ่างทอง", "อุทัยธานี"]
             },
             {
-                key: "east", name: "ภาคตะวันออก", icon: "🌅",
+                key: "east", color: "#ab47bc", name: "ภาคตะวันออก", icon: "🌅",
                 provinces: ["จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ตราด",
                             "ปราจีนบุรี", "ระยอง", "สระแก้ว"]
             },
             {
-                key: "west", name: "ภาคตะวันตก", icon: "🌲",
+                key: "west", color: "#ff7043", name: "ภาคตะวันตก", icon: "🌲",
                 provinces: ["กาญจนบุรี", "ตาก", "ประจวบคีรีขันธ์", "เพชรบุรี", "ราชบุรี"]
             },
             {
-                key: "south", name: "ภาคใต้", icon: "🏝️",
+                key: "south", color: "#26c6da", name: "ภาคใต้", icon: "🏝️",
                 provinces: ["กระบี่", "ชุมพร", "ตรัง", "นครศรีธรรมราช", "นราธิวาส",
                             "ปัตตานี", "พังงา", "พัทลุง", "ภูเก็ต", "ยะลา",
                             "ระนอง", "สงขลา", "สตูล", "สุราษฎร์ธานี"]
@@ -1352,7 +1720,8 @@
         // =========================================================
         // 11) หน้าต่างข้อมูล
         // =========================================================
-        function openDashboard(level) {
+        // mode = "screen" (หน้าต่างเต็มหน้า) หรือ "map" (กรอบขวาข้างแผนที่)
+        function openDashboard(level, mode = "screen") {
             state.level = level;
             if (level === "province") {
                 state.district = null;
@@ -1370,6 +1739,25 @@
             document.getElementById("placePath").textContent = path.join(" › ");
             document.getElementById("regionTag").textContent = state.region.icon + " " + state.region.name;
 
+            state.locPromise = resolveLocation();
+            state.locPromise.catch(() => {}); // กัน error ค้าง ถ้ายังไม่มีเมนูไหนรอใช้
+
+            const win = document.getElementById("infoWindow");
+            renderSidebar();
+            openMenu(mode === "map" && state.menu ? state.menu : "weather");
+
+            if (mode === "map") {
+                // ย้ายหน้าต่างข้อมูลไปไว้กรอบขวาของแผนที่
+                document.getElementById("infoPane").appendChild(win);
+                win.classList.add("compact");
+                openSplit();
+                return;
+            }
+
+            // ย้ายหน้าต่างข้อมูลกลับมาหน้าเต็ม
+            document.getElementById("resultPanel").appendChild(win);
+            win.classList.remove("compact");
+
             // ปุ่มย้อนกลับไปหน้ารายการที่มา
             const backBtn = document.getElementById("resultBack");
             if (level === "province") {
@@ -1381,12 +1769,328 @@
                 backBtn.onclick = () => selectDistrict(district);
             }
 
-            state.locPromise = resolveLocation();
-            state.locPromise.catch(() => {}); // กัน error ค้าง ถ้ายังไม่มีเมนูไหนรอใช้
-
-            renderSidebar();
-            openMenu("weather");
             showScreen("resultScreen");
+        }
+
+        // =========================================================
+        // 12) แผนที่ประเทศไทย
+        // =========================================================
+        let map = null;
+        let markerLayer = null;
+        let mapMarkers = {};      // id → marker (ใช้ไฮไลต์หมุดที่เลือก)
+        let mapLevel = "country"; // country | province | district
+        let idx = null;           // ดัชนีข้อมูลสำหรับแผนที่
+
+        const THAI_CENTER = [13.2, 101.0];
+
+        function regionOf(provinceName) {
+            return regions.find(r => r.provinces.includes(provinceName));
+        }
+
+        // สร้างดัชนีครั้งเดียว: อำเภอของแต่ละจังหวัด ตำบลของแต่ละอำเภอ และพิกัดกลาง
+        function buildIndex() {
+            if (idx) return idx;
+            idx = { provinceByName: {}, districtsByProvince: {}, tambonsByDistrict: {}, coord: {} };
+
+            geo.tambons.forEach(t => {
+                const key = String(t.district_id);
+                (idx.tambonsByDistrict[key] = idx.tambonsByDistrict[key] || []).push(t);
+            });
+
+            geo.districts.forEach(d => {
+                const key = String(d.province_id);
+                (idx.districtsByProvince[key] = idx.districtsByProvince[key] || []).push(d);
+                idx.coord["d" + d.id] = averageCoord(idx.tambonsByDistrict[String(d.id)] || []);
+            });
+
+            geo.provinces.forEach(p => {
+                idx.provinceByName[thName(p)] = p;
+                const tambons = (idx.districtsByProvince[String(p.id)] || [])
+                    .flatMap(d => idx.tambonsByDistrict[String(d.id)] || []);
+                idx.coord["p" + p.id] = averageCoord(tambons);
+            });
+
+            return idx;
+        }
+
+        function initMap() {
+            if (map) return;
+            map = L.map("map", { zoomControl: true }).setView(THAI_CENTER, 6);
+            L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+                maxZoom: 18,
+                subdomains: "abcd",
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            }).addTo(map);
+            markerLayer = L.layerGroup().addTo(map);
+        }
+
+        // หมุดรูปลูกศรชี้ลง
+        function pinIcon(color, size) {
+            return L.divIcon({
+                className: "pin-wrap",
+                html: `<div class="pin" style="--c:${color}"></div>`,
+                iconSize: [size, size],
+                iconAnchor: [size / 2, size * 1.2]
+            });
+        }
+
+        function addPin(id, coord, color, size, label, onClick) {
+            const marker = L.marker([coord.lat, coord.lon], { icon: pinIcon(color, size) })
+                .bindTooltip(label, { direction: "top", offset: [0, -size], className: "map-tip" })
+                .on("click", onClick)
+                .addTo(markerLayer);
+            mapMarkers[id] = marker;
+            return marker;
+        }
+
+        function clearPins() {
+            markerLayer.clearLayers();
+            mapMarkers = {};
+        }
+
+        function highlightPin(id) {
+            Object.entries(mapMarkers).forEach(([key, m]) => {
+                const el = m.getElement();
+                if (el) el.classList.toggle("selected", key === id);
+            });
+        }
+
+        function fitTo(coords, maxZoom) {
+            if (!coords.length) return;
+            if (coords.length === 1) {
+                map.flyTo([coords[0].lat, coords[0].lon], maxZoom, { duration: 0.8 });
+                return;
+            }
+            const bounds = L.latLngBounds(coords.map(c => [c.lat, c.lon]));
+            map.flyToBounds(bounds, { padding: [60, 60], maxZoom, duration: 0.8 });
+        }
+
+        // แผงควบคุมบนแผนที่: คำแนะนำ + รายชื่อแบบเลือก + ปุ่มดูทั้งพื้นที่
+        function setMapControls(hint, items, onPick, skip) {
+            document.getElementById("mapHint").textContent = hint;
+
+            const select = document.getElementById("mapSelect");
+            select.innerHTML = '<option value="">— หรือเลือกจากรายชื่อ —</option>';
+            items.slice()
+                .sort((a, b) => a.label.localeCompare(b.label, "th"))
+                .forEach((item, i) => {
+                    const opt = document.createElement("option");
+                    opt.value = item.key;
+                    opt.textContent = item.label;
+                    select.appendChild(opt);
+                });
+            select.onchange = () => {
+                const item = items.find(it => it.key === select.value);
+                if (item) onPick(item.data);
+                select.value = "";
+            };
+
+            const skipBtn = document.getElementById("mapSkip");
+            skipBtn.style.display = skip ? "inline-block" : "none";
+            if (skip) {
+                skipBtn.textContent = skip.label;
+                skipBtn.onclick = skip.fn;
+            }
+        }
+
+        function setLegend(show) {
+            const legend = document.getElementById("mapLegend");
+            legend.innerHTML = show
+                ? regions.map(r => `<span><i style="background:${r.color}"></i>${r.name}</span>`).join("")
+                : "";
+        }
+
+        // แถบบอกตำแหน่ง: ประเทศไทย › จังหวัด › อำเภอ › ตำบล (กดย้อนได้)
+        function setCrumb() {
+            const crumb = document.getElementById("mapCrumb");
+            crumb.innerHTML = "";
+            const parts = [{ label: "🇹🇭 ประเทศไทย", fn: showCountry }];
+            if (state.province) parts.push({ label: provinceTitle(state.province), fn: () => mapProvince(state.province) });
+            if (state.district) {
+                const d = state.district;
+                parts.push({ label: prefixOf(d, "อำเภอ") + thName(d), fn: () => mapDistrict(d) });
+            }
+            if (state.tambon) parts.push({ label: prefixOf(state.tambon, "ตำบล") + thName(state.tambon) });
+
+            parts.forEach((p, i) => {
+                if (i > 0) crumb.appendChild(document.createTextNode(" › "));
+                const isLast = i === parts.length - 1;
+                if (isLast || !p.fn) {
+                    const span = document.createElement("span");
+                    span.className = "current";
+                    span.textContent = p.label;
+                    crumb.appendChild(span);
+                } else {
+                    const btn = document.createElement("button");
+                    btn.textContent = p.label;
+                    btn.addEventListener("click", p.fn);
+                    crumb.appendChild(btn);
+                }
+            });
+        }
+
+        function setMapLoading(html) {
+            const box = document.getElementById("mapLoading");
+            box.innerHTML = html || "";
+            box.classList.toggle("hidden", !html);
+        }
+
+        // เปิด/ปิดกรอบข้อมูลด้านขวา
+        function openSplit() {
+            const layout = document.getElementById("mapLayout");
+            const wasOpen = layout.classList.contains("split");
+            layout.classList.add("split");
+            refreshMapSize();
+            if (!wasOpen && window.innerWidth <= 860) {
+                setTimeout(() => document.getElementById("infoPane").scrollIntoView({ behavior: "smooth" }), 300);
+            }
+        }
+
+        function closeSplit() {
+            document.getElementById("mapLayout").classList.remove("split");
+            refreshMapSize();
+        }
+
+        function refreshMapSize() {
+            if (!map) return;
+            [100, 350, 700].forEach(ms => setTimeout(() => map.invalidateSize(), ms));
+        }
+
+        // เข้าหน้าแผนที่
+        async function openMap() {
+            showScreen("mapScreen");
+            initMap();
+            closeSplit();
+            state.menu = null;
+            setMapLoading('<div class="loading"><span class="spinner"></span>กำลังโหลดแผนที่และรายชื่อพื้นที่...</div>');
+
+            try {
+                await loadGeo();
+            } catch (err) {
+                setMapLoading(`<div class="error-box">โหลดข้อมูลไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่<br>
+                    <button class="ghost-btn" id="mapRetry">ลองใหม่</button></div>`);
+                document.getElementById("mapRetry").addEventListener("click", openMap);
+                return;
+            }
+
+            buildIndex();
+            setMapLoading("");
+            showCountry();
+        }
+
+        // ระดับประเทศ: หมุดทุกจังหวัด สีตามภาค
+        function showCountry() {
+            mapLevel = "country";
+            state.region = null;
+            state.province = null;
+            state.provinceRec = null;
+            state.district = null;
+            state.tambon = null;
+            closeSplit();
+            clearPins();
+
+            const items = [];
+            regions.forEach(region => {
+                region.provinces.forEach(name => {
+                    const rec = idx.provinceByName[name];
+                    items.push({ key: name, label: name, data: name });
+                    const c = rec && idx.coord["p" + rec.id];
+                    if (c) addPin("p" + rec.id, c, region.color, 22, name, () => mapProvince(name));
+                });
+            });
+
+            map.flyTo(THAI_CENTER, 6, { duration: 0.8 });
+            setMapControls("แตะหมุดเพื่อเลือกจังหวัด", items, mapProvince, null);
+            setLegend(true);
+            setCrumb();
+        }
+
+        // ระดับจังหวัด: ซ่อนจังหวัดอื่น แสดงหมุดอำเภอ
+        function mapProvince(name) {
+            const rec = idx.provinceByName[name];
+            mapLevel = "province";
+            state.region = regionOf(name);
+            state.province = name;
+            state.provinceRec = rec || null;
+            state.district = null;
+            state.tambon = null;
+            closeSplit();
+            clearPins();
+
+            const word = name === "กรุงเทพมหานคร" ? "เขต" : "อำเภอ";
+            const districts = rec ? (idx.districtsByProvince[String(rec.id)] || []) : [];
+            const coords = [];
+            districts.forEach(d => {
+                const c = idx.coord["d" + d.id];
+                if (!c) return;
+                coords.push(c);
+                addPin("d" + d.id, c, state.region.color, 18, prefixOf(d, word) + thName(d), () => mapDistrict(d));
+            });
+
+            if (coords.length) fitTo(coords, 10);
+            else if (rec && idx.coord["p" + rec.id]) fitTo([idx.coord["p" + rec.id]], 9);
+
+            setMapControls(
+                "แตะหมุดเพื่อเลือก" + word,
+                districts.map(d => ({ key: String(d.id), label: thName(d), data: d })),
+                mapDistrict,
+                { label: "📍 ดูข้อมูลทั้งจังหวัด", fn: () => openDashboard("province", "map") }
+            );
+            setLegend(false);
+            setCrumb();
+        }
+
+        // ระดับอำเภอ: แสดงหมุดตำบล
+        function mapDistrict(district) {
+            mapLevel = "district";
+            state.district = district;
+            state.tambon = null;
+            closeSplit();
+            clearPins();
+
+            const tambons = idx.tambonsByDistrict[String(district.id)] || [];
+            const tWord = tambons.length ? prefixOf(tambons[0], "ตำบล") : "ตำบล";
+            const coords = [];
+            tambons.forEach(t => {
+                const c = coordOf(t);
+                if (!c) return;
+                coords.push(c);
+                addPin("t" + t.id, c, state.region.color, 15, prefixOf(t, tWord) + thName(t), () => mapTambon(t));
+            });
+
+            if (coords.length) fitTo(coords, 13);
+            else if (idx.coord["d" + district.id]) fitTo([idx.coord["d" + district.id]], 11);
+
+            setMapControls(
+                "แตะหมุดเพื่อเลือก" + tWord,
+                tambons.map(t => ({ key: String(t.id), label: thName(t), data: t })),
+                mapTambon,
+                { label: "📍 ดูข้อมูลทั้ง" + prefixOf(district, "อำเภอ"), fn: () => openDashboard("district", "map") }
+            );
+            setCrumb();
+        }
+
+        // เลือกตำบล: แผนที่เลื่อนไปซ้าย ข้อมูลขึ้นด้านขวา
+        function mapTambon(tambon) {
+            state.tambon = tambon;
+            highlightPin("t" + tambon.id);
+            setCrumb();
+            openDashboard("tambon", "map");
+        }
+
+        // ปุ่มย้อนกลับบนหน้าแผนที่ (ย้อนทีละขั้น)
+        function mapBack() {
+            const isOpen = document.getElementById("mapLayout").classList.contains("split");
+            if (isOpen) {
+                state.tambon = null;
+                highlightPin(null);
+                closeSplit();
+                setCrumb();
+                return;
+            }
+            if (mapLevel === "district") return mapProvince(state.province);
+            if (mapLevel === "province") return showCountry();
+            showScreen("regionScreen");
         }
 
         function renderSidebar() {
@@ -1453,8 +2157,11 @@
         }
 
         // =========================================================
-        // 12) ผูกปุ่มต่าง ๆ
+        // 13) ผูกปุ่มต่าง ๆ
         // =========================================================
+        document.getElementById("mapEntry").addEventListener("click", openMap);
+        document.getElementById("mapBack").addEventListener("click", mapBack);
+
         document.getElementById("startBtn").addEventListener("click", () => {
             showScreen("regionScreen");
             loadGeo().catch(() => {}); // เริ่มโหลดรายชื่ออำเภอ/ตำบลไว้ล่วงหน้า
