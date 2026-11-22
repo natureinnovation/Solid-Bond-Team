@@ -55,6 +55,10 @@
             max-width: 900px;
         }
 
+        .panel.wide {
+            max-width: 1100px;
+        }
+
         /* ===== หน้าแรก ===== */
         #home {
             justify-content: center;
@@ -223,31 +227,215 @@
             padding: 30px 0;
         }
 
-        /* ===== หน้าผลลัพธ์ ===== */
-        .result-box {
-            background: rgba(255, 255, 255, 0.05);
+        /* ===== หน้าต่างข้อมูลจังหวัด ===== */
+        .window {
+            background: rgba(0, 0, 0, 0.25);
             border: 1px solid rgba(200, 230, 201, 0.12);
             border-radius: 24px;
-            padding: 40px 28px;
-            text-align: center;
-            backdrop-filter: blur(6px);
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
         }
 
-        .result-box .tag {
-            display: inline-block;
+        /* แถบหัวหน้าต่าง: ชื่อจังหวัด */
+        .window-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 22px 28px;
+            background: rgba(106, 159, 78, 0.12);
+            border-bottom: 1px solid rgba(200, 230, 201, 0.12);
+        }
+
+        .window-header h2 {
+            margin: 0;
+        }
+
+        .region-tag {
             font-size: 0.85rem;
             color: #a5d6a7;
             border: 1px solid rgba(165, 214, 167, 0.3);
             border-radius: 50px;
             padding: 4px 14px;
-            margin-bottom: 16px;
         }
 
-        .result-box p {
+        .window-body {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            min-height: 460px;
+        }
+
+        /* เมนูด้านซ้าย */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 20px 14px;
+            border-right: 1px solid rgba(200, 230, 201, 0.1);
+        }
+
+        .menu-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            color: #c8e6c9;
+            text-align: left;
+            background: transparent;
+            border: none;
+            border-radius: 14px;
+            padding: 13px 16px;
+            cursor: pointer;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        /* เมนูที่กำลังเลือกอยู่ */
+        .menu-item.active {
+            background: rgba(106, 159, 78, 0.22);
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .menu-item.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 20%;
+            height: 60%;
+            width: 4px;
+            border-radius: 4px;
+            background: #8bc34a;
+        }
+
+        .menu-item .m-icon {
+            font-size: 1.25rem;
+        }
+
+        /* พื้นที่แสดงผลด้านขวา */
+        .content {
+            padding: 28px 32px;
+        }
+
+        .content.fade {
+            animation: fadeIn 0.4s ease;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: #a5d6a7;
+            margin-bottom: 10px;
+        }
+
+        .now-viewing {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #dcedc8;
+            background: rgba(139, 195, 74, 0.15);
+            border: 1px solid rgba(139, 195, 74, 0.35);
+            border-radius: 50px;
+            padding: 4px 12px;
+            margin-bottom: 14px;
+        }
+
+        .now-viewing .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #8bc34a;
+            box-shadow: 0 0 8px #8bc34a;
+        }
+
+        .content h3 {
+            font-size: 1.6rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .content .desc {
             font-weight: 300;
             color: #c8e6c9;
-            margin-top: 12px;
-            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(200, 230, 201, 0.1);
+            border-radius: 18px;
+            padding: 18px 20px;
+        }
+
+        .stat .s-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .stat .s-label {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: #a5d6a7;
+        }
+
+        .stat .s-value {
+            font-size: 1.35rem;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .note {
+            margin-top: 22px;
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: rgba(200, 230, 201, 0.6);
+        }
+
+        /* มือถือ: เมนูย้ายไปด้านบนเป็นแถวเลื่อนได้ */
+        @media (max-width: 760px) {
+            .window-body {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 12px;
+                border-right: none;
+                border-bottom: 1px solid rgba(200, 230, 201, 0.1);
+            }
+
+            .menu-item {
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            .menu-item.active::before {
+                left: 20%;
+                top: auto;
+                bottom: 0;
+                width: 60%;
+                height: 3px;
+            }
+
+            .content {
+                padding: 22px 20px;
+            }
         }
     </style>
 </head>
@@ -282,14 +470,21 @@
         </div>
     </section>
 
-    <!-- หน้าผลลัพธ์ (ไว้ใส่ข้อมูลอากาศและดินในขั้นต่อไป) -->
+    <!-- หน้าต่างข้อมูลจังหวัด -->
     <section id="resultScreen" class="screen">
-        <div class="panel">
+        <div class="panel wide">
             <button class="back-btn" data-go="provinceScreen">← เลือกจังหวัดอื่น</button>
-            <div class="result-box">
-                <span class="tag" id="resultRegion"></span>
-                <h2 id="resultProvince"></h2>
-                <p>ข้อมูลสภาพอากาศและสภาพดินจะแสดงที่นี่</p>
+
+            <div class="window">
+                <div class="window-header">
+                    <h2 id="provinceTitle"></h2>
+                    <span class="region-tag" id="regionTag"></span>
+                </div>
+
+                <div class="window-body">
+                    <nav class="sidebar" id="sidebar"></nav>
+                    <div class="content" id="content"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -334,7 +529,57 @@
             }
         ];
 
+        // ===== เมนูในหน้าต่างจังหวัด (เพิ่มเมนูใหม่ได้ที่นี่) =====
+        const menus = [
+            {
+                id: "weather", icon: "🌤️", label: "สภาพอากาศ",
+                desc: "สภาพอากาศปัจจุบันของพื้นที่",
+                stats: () => [
+                    ["🌡️", "อุณหภูมิ", "-- °C"],
+                    ["💧", "ความชื้น", "-- %"],
+                    ["🌧️", "โอกาสฝนตก", "-- %"],
+                    ["🍃", "ความเร็วลม", "-- กม./ชม."]
+                ]
+            },
+            {
+                id: "soil", icon: "🌱", label: "สภาพดิน",
+                desc: "ชนิดและคุณภาพของดินในจังหวัด",
+                stats: () => [
+                    ["🪨", "ชนิดดิน", "--"],
+                    ["⚗️", "ค่า pH", "--"],
+                    ["🌿", "ความอุดมสมบูรณ์", "--"],
+                    ["💦", "การระบายน้ำ", "--"]
+                ]
+            },
+            {
+                id: "crops", icon: "🌾", label: "พืชที่เหมาะสม",
+                desc: "พืชที่เหมาะกับดินและอากาศของพื้นที่",
+                stats: () => [
+                    ["🌾", "พืชไร่", "--"],
+                    ["🍊", "ไม้ผล", "--"],
+                    ["🥬", "พืชผัก", "--"]
+                ]
+            },
+            {
+                id: "water", icon: "💧", label: "แหล่งน้ำ",
+                desc: "แม่น้ำ เขื่อน และแหล่งน้ำสำคัญ",
+                stats: () => [
+                    ["🏞️", "แม่น้ำสำคัญ", "--"],
+                    ["🚧", "เขื่อน / อ่างเก็บน้ำ", "--"]
+                ]
+            },
+            {
+                id: "info", icon: "📍", label: "ข้อมูลทั่วไป",
+                desc: "ข้อมูลพื้นฐานของจังหวัด",
+                stats: (province, region) => [
+                    ["🏙️", "จังหวัด", province],
+                    ["🗺️", "ภูมิภาค", region.name]
+                ]
+            }
+        ];
+
         let currentRegion = null;
+        let currentProvince = null;
 
         // ===== สลับหน้าจอ =====
         function showScreen(id) {
@@ -391,11 +636,62 @@
             document.getElementById("emptyMsg").style.display = list.length ? "none" : "block";
         }
 
-        // ===== เลือกจังหวัดแล้ว =====
+        // ===== เลือกจังหวัด → เปิดหน้าต่างข้อมูล =====
         function selectProvince(name) {
-            document.getElementById("resultRegion").textContent = currentRegion.name;
-            document.getElementById("resultProvince").textContent = "จังหวัด" + name;
+            currentProvince = name;
+            document.getElementById("provinceTitle").textContent = "จังหวัด" + name;
+            document.getElementById("regionTag").textContent = currentRegion.icon + " " + currentRegion.name;
+            renderSidebar();
+            openMenu("weather");
             showScreen("resultScreen");
+        }
+
+        // ===== สร้างเมนูด้านซ้าย =====
+        function renderSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.innerHTML = "";
+            menus.forEach(menu => {
+                const item = document.createElement("button");
+                item.className = "menu-item";
+                item.dataset.id = menu.id;
+                item.innerHTML = `<span class="m-icon">${menu.icon}</span><span>${menu.label}</span>`;
+                item.addEventListener("click", () => openMenu(menu.id));
+                sidebar.appendChild(item);
+            });
+        }
+
+        // ===== แสดงผลด้านขวาตามเมนูที่เลือก =====
+        function openMenu(id) {
+            const menu = menus.find(m => m.id === id);
+
+            // ไฮไลต์เมนูที่กำลังดูอยู่
+            document.querySelectorAll(".menu-item").forEach(item => {
+                item.classList.toggle("active", item.dataset.id === id);
+            });
+
+            const stats = menu.stats(currentProvince, currentRegion)
+                .map(([icon, label, value]) => `
+                    <div class="stat">
+                        <div class="s-icon">${icon}</div>
+                        <div class="s-label">${label}</div>
+                        <div class="s-value">${value}</div>
+                    </div>
+                `).join("");
+
+            const content = document.getElementById("content");
+            content.innerHTML = `
+                <div class="breadcrumb">จังหวัด${currentProvince} › ${menu.label}</div>
+                <div class="now-viewing"><span class="dot"></span>กำลังดู</div>
+                <h3>${menu.icon} ${menu.label}</h3>
+                <p class="desc">${menu.desc}</p>
+                <div class="stats">${stats}</div>
+                ${id === "info" ? "" : '<p class="note">* ช่อง "--" จะแสดงข้อมูลจริงเมื่อเชื่อมต่อแหล่งข้อมูลแล้ว</p>'}
+            `;
+
+            // เล่นแอนิเมชันจางเข้าทุกครั้งที่เปลี่ยนเมนู
+            content.classList.remove("fade");
+            void content.offsetWidth;
+            content.classList.add("fade");
         }
 
         // ===== ผูกปุ่มต่าง ๆ =====
