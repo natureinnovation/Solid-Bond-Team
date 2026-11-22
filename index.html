@@ -3,15 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เว็บไซต์แรกของฉัน</title>
+    <title>Nature Innovation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            font-family: "Sarabun", "Noto Sans Thai", sans-serif;
+            color: #e8f5e9;
+            text-align: center;
+            padding: 20px;
+
+            /* พื้นหลังไล่สีจากล่าง (ดำ) ขึ้นบน (เขียวธรรมชาติ) และค่อย ๆ ขยับขึ้นลง */
+            background: linear-gradient(to top,
+                #000000 0%, #0b2414 20%, #1f5130 40%, #2e6b3f 50%,
+                #1f5130 60%, #0b2414 80%, #000000 100%);
+            background-size: 100% 200%;
+            background-attachment: fixed;
+            animation: bgMove 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgMove {
+            0%   { background-position: 50% 100%; }
+            100% { background-position: 50% 50%; }
+        }
+
+        h1 {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        p {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            color: #c8e6c9;
+            max-width: 520px;
+            line-height: 1.7;
+        }
+
+        /* ปุ่มสีเขียวธรรมชาติ มีเงาดำฟุ้งด้านหลังให้ดูลอยขึ้นมา */
+        .start-btn {
+            font-family: inherit;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+            padding: 18px 56px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+
+            background: linear-gradient(to bottom, #6a9f4e, #4a7c36);
+
+            /* เงาดำฟุ้งหลายชั้น */
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.55),
+                0 25px 60px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .start-btn:hover {
+            background: linear-gradient(to bottom, #7cb35c, #558b3f);
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.6),
+                0 35px 80px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .start-btn:active {
+            transform: translateY(2px);
+        }
+    </style>
 </head>
 <body>
 
-    <h1>ยินดีต้อนรับสู่เว็บไซต์ของฉัน</h1>
+    <h1>🌿 Nature Innovation</h1>
 
-    <p>นี่คือเว็บไซต์แรกที่ฉันสร้างขึ้น</p>
+    <p>เช็คสภาพอากาศและสภาพดินของแต่ละจังหวัดทั่วประเทศไทย</p>
 
-    <button>คลิกที่นี่</button>
+    <button class="start-btn" onclick="startApp()">เริ่มต้นใช้งาน</button>
+
+    <script>
+        function startApp() {
+            // ตอนนี้แค่แสดงข้อความ ภายหลังเปลี่ยนเป็นลิงก์ไปหน้าเลือกจังหวัดได้
+            // เช่น window.location.href = "provinces.html";
+            alert("ยินดีต้อนรับ! เร็ว ๆ นี้จะมีหน้าเลือกจังหวัด");
+        }
+    </script>
 
 </body>
 </html>
