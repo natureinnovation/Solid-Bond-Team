@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nature Innovation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,17 +14,10 @@
 
         body {
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            font-family: "Sarabun", "Noto Sans Thai", sans-serif;
+            font-family: "Prompt", sans-serif;
             color: #e8f5e9;
-            text-align: center;
-            padding: 20px;
 
-            /* พื้นหลังไล่สีจากล่าง (ดำ) ขึ้นบน (เขียวธรรมชาติ) และค่อย ๆ ขยับขึ้นลง */
+            /* พื้นหลังไล่สีดำ-เขียว ขยับช้า ๆ */
             background: linear-gradient(to top,
                 #000000 0%, #0b2414 20%, #1f5130 40%, #2e6b3f 50%,
                 #1f5130 60%, #0b2414 80%, #000000 100%);
@@ -37,39 +31,65 @@
             100% { background-position: 50% 50%; }
         }
 
+        /* ===== ระบบหน้าจอ ===== */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 48px 20px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .screen.active {
+            display: flex;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* ===== หน้าแรก ===== */
+        #home {
+            justify-content: center;
+            text-align: center;
+            gap: 40px;
+        }
+
         h1 {
             font-size: clamp(2rem, 6vw, 3.5rem);
-            font-weight: 700;
-            letter-spacing: 1px;
+            font-weight: 600;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
         }
 
-        p {
-            font-size: clamp(1rem, 3vw, 1.25rem);
+        .lead {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 300;
             color: #c8e6c9;
             max-width: 520px;
             line-height: 1.7;
         }
 
-        /* ปุ่มสีเขียวธรรมชาติ มีเงาดำฟุ้งด้านหลังให้ดูลอยขึ้นมา */
         .start-btn {
             font-family: inherit;
-            font-size: 1.3rem;
-            font-weight: 600;
+            font-size: 1.25rem;
+            font-weight: 500;
             color: #ffffff;
             padding: 18px 56px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-
             background: linear-gradient(to bottom, #6a9f4e, #4a7c36);
-
-            /* เงาดำฟุ้งหลายชั้น */
             box-shadow:
                 0 10px 25px rgba(0, 0, 0, 0.55),
                 0 25px 60px rgba(0, 0, 0, 0.6),
                 inset 0 1px 0 rgba(255, 255, 255, 0.25);
-
             transition: background 0.3s, box-shadow 0.3s;
         }
 
@@ -84,22 +104,312 @@
         .start-btn:active {
             transform: translateY(2px);
         }
+
+        /* ===== ส่วนหัวของหน้าเลือก ===== */
+        .back-btn {
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: #c8e6c9;
+            background: transparent;
+            border: 1px solid rgba(200, 230, 201, 0.25);
+            border-radius: 50px;
+            padding: 8px 20px;
+            cursor: pointer;
+            margin-bottom: 28px;
+            transition: background 0.25s, border-color 0.25s;
+        }
+
+        .back-btn:hover {
+            background: rgba(106, 159, 78, 0.15);
+            border-color: rgba(124, 179, 92, 0.6);
+        }
+
+        h2 {
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-weight: 300;
+            color: #a5d6a7;
+            margin-bottom: 32px;
+        }
+
+        /* ===== การ์ด ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .grid.small {
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 12px;
+        }
+
+        .card {
+            font-family: inherit;
+            color: inherit;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(200, 230, 201, 0.12);
+            border-radius: 20px;
+            padding: 24px;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+            transition: transform 0.25s, background 0.25s, border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            background: rgba(106, 159, 78, 0.15);
+            border-color: rgba(124, 179, 92, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+        }
+
+        .card .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .card .name {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .card .count {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: #a5d6a7;
+            margin-top: 4px;
+        }
+
+        .card.province {
+            text-align: center;
+            padding: 16px 12px;
+            font-size: 1rem;
+            border-radius: 16px;
+        }
+
+        /* ===== ช่องค้นหา ===== */
+        .search {
+            width: 100%;
+            font-family: inherit;
+            font-size: 1rem;
+            color: #e8f5e9;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(200, 230, 201, 0.2);
+            border-radius: 50px;
+            padding: 14px 22px;
+            margin-bottom: 24px;
+            outline: none;
+            transition: border-color 0.25s;
+        }
+
+        .search::placeholder {
+            color: rgba(200, 230, 201, 0.5);
+        }
+
+        .search:focus {
+            border-color: rgba(124, 179, 92, 0.7);
+        }
+
+        .empty {
+            display: none;
+            text-align: center;
+            color: #a5d6a7;
+            font-weight: 300;
+            padding: 30px 0;
+        }
+
+        /* ===== หน้าผลลัพธ์ ===== */
+        .result-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(200, 230, 201, 0.12);
+            border-radius: 24px;
+            padding: 40px 28px;
+            text-align: center;
+            backdrop-filter: blur(6px);
+        }
+
+        .result-box .tag {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: #a5d6a7;
+            border: 1px solid rgba(165, 214, 167, 0.3);
+            border-radius: 50px;
+            padding: 4px 14px;
+            margin-bottom: 16px;
+        }
+
+        .result-box p {
+            font-weight: 300;
+            color: #c8e6c9;
+            margin-top: 12px;
+            line-height: 1.7;
+        }
     </style>
 </head>
 <body>
 
-    <h1>🌿 Nature Innovation</h1>
+    <!-- หน้าแรก -->
+    <section id="home" class="screen active">
+        <h1>🌿 Nature Innovation</h1>
+        <p class="lead">เช็คสภาพอากาศและสภาพดินของแต่ละจังหวัดทั่วประเทศไทย</p>
+        <button class="start-btn" id="startBtn">เริ่มต้นใช้งาน</button>
+    </section>
 
-    <p>เช็คสภาพอากาศและสภาพดินของแต่ละจังหวัดทั่วประเทศไทย</p>
+    <!-- หน้าเลือกภูมิภาค -->
+    <section id="regionScreen" class="screen">
+        <div class="panel">
+            <button class="back-btn" data-go="home">← กลับหน้าแรก</button>
+            <h2>เลือกภูมิภาค</h2>
+            <p class="subtitle">เลือกภาคที่ต้องการดูข้อมูล</p>
+            <div class="grid" id="regionGrid"></div>
+        </div>
+    </section>
 
-    <button class="start-btn" onclick="startApp()">เริ่มต้นใช้งาน</button>
+    <!-- หน้าเลือกจังหวัด -->
+    <section id="provinceScreen" class="screen">
+        <div class="panel">
+            <button class="back-btn" data-go="regionScreen">← เลือกภาคอื่น</button>
+            <h2 id="regionTitle"></h2>
+            <p class="subtitle" id="regionSubtitle"></p>
+            <input type="text" class="search" id="searchInput" placeholder="🔍 ค้นหาจังหวัด...">
+            <div class="grid small" id="provinceGrid"></div>
+            <p class="empty" id="emptyMsg">ไม่พบจังหวัดที่ค้นหา</p>
+        </div>
+    </section>
+
+    <!-- หน้าผลลัพธ์ (ไว้ใส่ข้อมูลอากาศและดินในขั้นต่อไป) -->
+    <section id="resultScreen" class="screen">
+        <div class="panel">
+            <button class="back-btn" data-go="provinceScreen">← เลือกจังหวัดอื่น</button>
+            <div class="result-box">
+                <span class="tag" id="resultRegion"></span>
+                <h2 id="resultProvince"></h2>
+                <p>ข้อมูลสภาพอากาศและสภาพดินจะแสดงที่นี่</p>
+            </div>
+        </div>
+    </section>
 
     <script>
-        function startApp() {
-            // ตอนนี้แค่แสดงข้อความ ภายหลังเปลี่ยนเป็นลิงก์ไปหน้าเลือกจังหวัดได้
-            // เช่น window.location.href = "provinces.html";
-            alert("ยินดีต้อนรับ! เร็ว ๆ นี้จะมีหน้าเลือกจังหวัด");
+        // ===== ข้อมูลภูมิภาคและจังหวัด (77 จังหวัด) =====
+        const regions = [
+            {
+                name: "ภาคเหนือ", icon: "⛰️",
+                provinces: ["เชียงราย", "เชียงใหม่", "น่าน", "พะเยา", "แพร่",
+                            "แม่ฮ่องสอน", "ลำปาง", "ลำพูน", "อุตรดิตถ์"]
+            },
+            {
+                name: "ภาคตะวันออกเฉียงเหนือ", icon: "🌾",
+                provinces: ["กาฬสินธุ์", "ขอนแก่น", "ชัยภูมิ", "นครพนม", "นครราชสีมา",
+                            "บึงกาฬ", "บุรีรัมย์", "มหาสารคาม", "มุกดาหาร", "ยโสธร",
+                            "ร้อยเอ็ด", "เลย", "ศรีสะเกษ", "สกลนคร", "สุรินทร์",
+                            "หนองคาย", "หนองบัวลำภู", "อำนาจเจริญ", "อุดรธานี", "อุบลราชธานี"]
+            },
+            {
+                name: "ภาคกลาง", icon: "🏞️",
+                provinces: ["กรุงเทพมหานคร", "กำแพงเพชร", "ชัยนาท", "นครนายก", "นครปฐม",
+                            "นครสวรรค์", "นนทบุรี", "ปทุมธานี", "พระนครศรีอยุธยา", "พิจิตร",
+                            "พิษณุโลก", "เพชรบูรณ์", "ลพบุรี", "สมุทรปราการ", "สมุทรสงคราม",
+                            "สมุทรสาคร", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี",
+                            "อ่างทอง", "อุทัยธานี"]
+            },
+            {
+                name: "ภาคตะวันออก", icon: "🌅",
+                provinces: ["จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ตราด",
+                            "ปราจีนบุรี", "ระยอง", "สระแก้ว"]
+            },
+            {
+                name: "ภาคตะวันตก", icon: "🌲",
+                provinces: ["กาญจนบุรี", "ตาก", "ประจวบคีรีขันธ์", "เพชรบุรี", "ราชบุรี"]
+            },
+            {
+                name: "ภาคใต้", icon: "🏝️",
+                provinces: ["กระบี่", "ชุมพร", "ตรัง", "นครศรีธรรมราช", "นราธิวาส",
+                            "ปัตตานี", "พังงา", "พัทลุง", "ภูเก็ต", "ยะลา",
+                            "ระนอง", "สงขลา", "สตูล", "สุราษฎร์ธานี"]
+            }
+        ];
+
+        let currentRegion = null;
+
+        // ===== สลับหน้าจอ =====
+        function showScreen(id) {
+            document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+            document.getElementById(id).classList.add("active");
+            window.scrollTo(0, 0);
         }
+
+        // ===== สร้างการ์ดภูมิภาค =====
+        function renderRegions() {
+            const grid = document.getElementById("regionGrid");
+            grid.innerHTML = "";
+            regions.forEach(region => {
+                const card = document.createElement("button");
+                card.className = "card";
+                card.innerHTML = `
+                    <div class="icon">${region.icon}</div>
+                    <div class="name">${region.name}</div>
+                    <div class="count">${region.provinces.length} จังหวัด</div>
+                `;
+                card.addEventListener("click", () => openRegion(region));
+                grid.appendChild(card);
+            });
+        }
+
+        // ===== เปิดหน้าจังหวัดของภาคที่เลือก =====
+        function openRegion(region) {
+            currentRegion = region;
+            document.getElementById("regionTitle").textContent = region.icon + " " + region.name;
+            document.getElementById("regionSubtitle").textContent =
+                "เลือกจังหวัด (" + region.provinces.length + " จังหวัด)";
+            document.getElementById("searchInput").value = "";
+            renderProvinces("");
+            showScreen("provinceScreen");
+        }
+
+        // ===== สร้างการ์ดจังหวัด (กรองตามคำค้นหา) =====
+        function renderProvinces(keyword) {
+            const grid = document.getElementById("provinceGrid");
+            grid.innerHTML = "";
+
+            const list = currentRegion.provinces
+                .filter(p => p.includes(keyword.trim()))
+                .sort((a, b) => a.localeCompare(b, "th"));
+
+            list.forEach(name => {
+                const card = document.createElement("button");
+                card.className = "card province";
+                card.textContent = name;
+                card.addEventListener("click", () => selectProvince(name));
+                grid.appendChild(card);
+            });
+
+            document.getElementById("emptyMsg").style.display = list.length ? "none" : "block";
+        }
+
+        // ===== เลือกจังหวัดแล้ว =====
+        function selectProvince(name) {
+            document.getElementById("resultRegion").textContent = currentRegion.name;
+            document.getElementById("resultProvince").textContent = "จังหวัด" + name;
+            showScreen("resultScreen");
+        }
+
+        // ===== ผูกปุ่มต่าง ๆ =====
+        document.getElementById("startBtn").addEventListener("click", () => showScreen("regionScreen"));
+
+        document.querySelectorAll("[data-go]").forEach(btn => {
+            btn.addEventListener("click", () => showScreen(btn.dataset.go));
+        });
+
+        document.getElementById("searchInput").addEventListener("input", e => {
+            renderProvinces(e.target.value);
+        });
+
+        renderRegions();
     </script>
 
 </body>
