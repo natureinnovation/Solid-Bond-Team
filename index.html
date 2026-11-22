@@ -31,6 +31,10 @@
             100% { background-position: 50% 50%; }
         }
 
+        a {
+            color: #aed581;
+        }
+
         /* ===== ระบบหน้าจอ ===== */
         .screen {
             display: none;
@@ -109,8 +113,9 @@
             transform: translateY(2px);
         }
 
-        /* ===== ส่วนหัวของหน้าเลือก ===== */
-        .back-btn {
+        /* ===== ปุ่มทั่วไป ===== */
+        .back-btn,
+        .ghost-btn {
             font-family: inherit;
             font-size: 0.95rem;
             color: #c8e6c9;
@@ -119,13 +124,35 @@
             border-radius: 50px;
             padding: 8px 20px;
             cursor: pointer;
-            margin-bottom: 28px;
             transition: background 0.25s, border-color 0.25s;
         }
 
-        .back-btn:hover {
+        .back-btn {
+            margin-bottom: 28px;
+        }
+
+        .back-btn:hover,
+        .ghost-btn:hover {
             background: rgba(106, 159, 78, 0.15);
             border-color: rgba(124, 179, 92, 0.6);
+        }
+
+        .skip-btn {
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #ffffff;
+            background: linear-gradient(to bottom, #6a9f4e, #4a7c36);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 22px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+            transition: background 0.25s;
+        }
+
+        .skip-btn:hover {
+            background: linear-gradient(to bottom, #7cb35c, #558b3f);
         }
 
         h2 {
@@ -137,7 +164,15 @@
         .subtitle {
             font-weight: 300;
             color: #a5d6a7;
-            margin-bottom: 32px;
+            margin-bottom: 20px;
+        }
+
+        .list-actions {
+            margin-bottom: 20px;
+        }
+
+        .list-actions:empty {
+            display: none;
         }
 
         /* ===== การ์ด ===== */
@@ -189,7 +224,7 @@
             margin-top: 4px;
         }
 
-        .card.province {
+        .card.item {
             text-align: center;
             padding: 16px 12px;
             font-size: 1rem;
@@ -219,15 +254,43 @@
             border-color: rgba(124, 179, 92, 0.7);
         }
 
-        .empty {
-            display: none;
+        .list-msg {
             text-align: center;
             color: #a5d6a7;
             font-weight: 300;
             padding: 30px 0;
+            line-height: 1.8;
         }
 
-        /* ===== หน้าต่างข้อมูลจังหวัด ===== */
+        .list-msg:empty {
+            display: none;
+        }
+
+        /* ===== ตัวหมุนตอนโหลด ===== */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #a5d6a7;
+            font-weight: 300;
+            padding: 40px 0;
+        }
+
+        .spinner {
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(165, 214, 167, 0.25);
+            border-top-color: #8bc34a;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== หน้าต่างข้อมูล ===== */
         .window {
             background: rgba(0, 0, 0, 0.25);
             border: 1px solid rgba(200, 230, 201, 0.12);
@@ -237,7 +300,6 @@
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
         }
 
-        /* แถบหัวหน้าต่าง: ชื่อจังหวัด */
         .window-header {
             display: flex;
             align-items: center;
@@ -253,6 +315,16 @@
             margin: 0;
         }
 
+        .place-path {
+            font-weight: 300;
+            color: #c8e6c9;
+            margin-top: 4px;
+        }
+
+        .place-path:empty {
+            display: none;
+        }
+
         .region-tag {
             font-size: 0.85rem;
             color: #a5d6a7;
@@ -264,7 +336,7 @@
         .window-body {
             display: grid;
             grid-template-columns: 240px 1fr;
-            min-height: 460px;
+            min-height: 480px;
         }
 
         /* เมนูด้านซ้าย */
@@ -298,7 +370,6 @@
             color: #ffffff;
         }
 
-        /* เมนูที่กำลังเลือกอยู่ */
         .menu-item.active {
             background: rgba(106, 159, 78, 0.22);
             color: #ffffff;
@@ -323,6 +394,7 @@
         /* พื้นที่แสดงผลด้านขวา */
         .content {
             padding: 28px 32px;
+            min-width: 0;
         }
 
         .content.fade {
@@ -394,16 +466,122 @@
         }
 
         .stat .s-value {
-            font-size: 1.35rem;
+            font-size: 1.2rem;
             font-weight: 500;
             margin-top: 2px;
+            line-height: 1.5;
+        }
+
+        .stats.text .s-value {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        /* สภาพอากาศตอนนี้ (กล่องใหญ่) */
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+            background: rgba(106, 159, 78, 0.12);
+            border: 1px solid rgba(139, 195, 74, 0.25);
+            border-radius: 20px;
+            padding: 22px 26px;
+            margin-bottom: 16px;
+        }
+
+        .hero .h-icon {
+            font-size: 3.5rem;
+        }
+
+        .hero .h-temp {
+            font-size: 3rem;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        .hero .h-text {
+            font-size: 1.1rem;
+            margin-top: 6px;
+        }
+
+        .hero .h-sub {
+            font-weight: 300;
+            color: #c8e6c9;
+            font-size: 0.9rem;
+        }
+
+        /* พยากรณ์ 5 วัน */
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin: 26px 0 12px;
+        }
+
+        .forecast {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .day {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(200, 230, 201, 0.1);
+            border-radius: 16px;
+            padding: 14px 8px;
+        }
+
+        .day .d-name {
+            font-size: 0.85rem;
+            color: #a5d6a7;
+        }
+
+        .day .d-icon {
+            font-size: 1.8rem;
+            margin: 6px 0;
+        }
+
+        .day .d-temp {
+            font-weight: 500;
+        }
+
+        .day .d-rain {
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: #c8e6c9;
+            margin-top: 2px;
+        }
+
+        /* ค่าฝุ่น */
+        .aqi-badge {
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1b1b1b;
+            border-radius: 50px;
+            padding: 4px 14px;
+            margin-top: 8px;
         }
 
         .note {
             margin-top: 22px;
             font-size: 0.85rem;
             font-weight: 300;
-            color: rgba(200, 230, 201, 0.6);
+            color: rgba(200, 230, 201, 0.7);
+            line-height: 1.7;
+        }
+
+        .error-box {
+            text-align: center;
+            padding: 30px 0;
+            color: #ffcc80;
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .error-box .ghost-btn {
+            margin-top: 14px;
         }
 
         /* มือถือ: เมนูย้ายไปด้านบนเป็นแถวเลื่อนได้ */
@@ -434,7 +612,7 @@
             }
 
             .content {
-                padding: 22px 20px;
+                padding: 22px 18px;
             }
         }
     </style>
@@ -451,33 +629,37 @@
     <!-- หน้าเลือกภูมิภาค -->
     <section id="regionScreen" class="screen">
         <div class="panel">
-            <button class="back-btn" data-go="home">← กลับหน้าแรก</button>
+            <button class="back-btn" id="regionBack">← กลับหน้าแรก</button>
             <h2>เลือกภูมิภาค</h2>
             <p class="subtitle">เลือกภาคที่ต้องการดูข้อมูล</p>
             <div class="grid" id="regionGrid"></div>
         </div>
     </section>
 
-    <!-- หน้าเลือกจังหวัด -->
-    <section id="provinceScreen" class="screen">
+    <!-- หน้ารายการ (ใช้ร่วมกัน: จังหวัด / อำเภอ / ตำบล) -->
+    <section id="listScreen" class="screen">
         <div class="panel">
-            <button class="back-btn" data-go="regionScreen">← เลือกภาคอื่น</button>
-            <h2 id="regionTitle"></h2>
-            <p class="subtitle" id="regionSubtitle"></p>
-            <input type="text" class="search" id="searchInput" placeholder="🔍 ค้นหาจังหวัด...">
-            <div class="grid small" id="provinceGrid"></div>
-            <p class="empty" id="emptyMsg">ไม่พบจังหวัดที่ค้นหา</p>
+            <button class="back-btn" id="listBack">← ย้อนกลับ</button>
+            <h2 id="listTitle"></h2>
+            <p class="subtitle" id="listSubtitle"></p>
+            <div class="list-actions" id="listActions"></div>
+            <input type="text" class="search" id="listSearch" placeholder="🔍 พิมพ์เพื่อค้นหา...">
+            <div class="grid small" id="listGrid"></div>
+            <div class="list-msg" id="listMsg"></div>
         </div>
     </section>
 
-    <!-- หน้าต่างข้อมูลจังหวัด -->
+    <!-- หน้าต่างข้อมูล -->
     <section id="resultScreen" class="screen">
         <div class="panel wide">
-            <button class="back-btn" data-go="provinceScreen">← เลือกจังหวัดอื่น</button>
+            <button class="back-btn" id="resultBack">← ย้อนกลับ</button>
 
             <div class="window">
                 <div class="window-header">
-                    <h2 id="provinceTitle"></h2>
+                    <div>
+                        <h2 id="provinceTitle"></h2>
+                        <div class="place-path" id="placePath"></div>
+                    </div>
                     <span class="region-tag" id="regionTag"></span>
                 </div>
 
@@ -490,22 +672,24 @@
     </section>
 
     <script>
-        // ===== ข้อมูลภูมิภาคและจังหวัด (77 จังหวัด) =====
+        // =========================================================
+        // 1) ข้อมูลภูมิภาคและจังหวัด (77 จังหวัด)
+        // =========================================================
         const regions = [
             {
-                name: "ภาคเหนือ", icon: "⛰️",
+                key: "north", name: "ภาคเหนือ", icon: "⛰️",
                 provinces: ["เชียงราย", "เชียงใหม่", "น่าน", "พะเยา", "แพร่",
                             "แม่ฮ่องสอน", "ลำปาง", "ลำพูน", "อุตรดิตถ์"]
             },
             {
-                name: "ภาคตะวันออกเฉียงเหนือ", icon: "🌾",
+                key: "northeast", name: "ภาคตะวันออกเฉียงเหนือ", icon: "🌾",
                 provinces: ["กาฬสินธุ์", "ขอนแก่น", "ชัยภูมิ", "นครพนม", "นครราชสีมา",
                             "บึงกาฬ", "บุรีรัมย์", "มหาสารคาม", "มุกดาหาร", "ยโสธร",
                             "ร้อยเอ็ด", "เลย", "ศรีสะเกษ", "สกลนคร", "สุรินทร์",
                             "หนองคาย", "หนองบัวลำภู", "อำนาจเจริญ", "อุดรธานี", "อุบลราชธานี"]
             },
             {
-                name: "ภาคกลาง", icon: "🏞️",
+                key: "central", name: "ภาคกลาง", icon: "🏞️",
                 provinces: ["กรุงเทพมหานคร", "กำแพงเพชร", "ชัยนาท", "นครนายก", "นครปฐม",
                             "นครสวรรค์", "นนทบุรี", "ปทุมธานี", "พระนครศรีอยุธยา", "พิจิตร",
                             "พิษณุโลก", "เพชรบูรณ์", "ลพบุรี", "สมุทรปราการ", "สมุทรสงคราม",
@@ -513,82 +697,221 @@
                             "อ่างทอง", "อุทัยธานี"]
             },
             {
-                name: "ภาคตะวันออก", icon: "🌅",
+                key: "east", name: "ภาคตะวันออก", icon: "🌅",
                 provinces: ["จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ตราด",
                             "ปราจีนบุรี", "ระยอง", "สระแก้ว"]
             },
             {
-                name: "ภาคตะวันตก", icon: "🌲",
+                key: "west", name: "ภาคตะวันตก", icon: "🌲",
                 provinces: ["กาญจนบุรี", "ตาก", "ประจวบคีรีขันธ์", "เพชรบุรี", "ราชบุรี"]
             },
             {
-                name: "ภาคใต้", icon: "🏝️",
+                key: "south", name: "ภาคใต้", icon: "🏝️",
                 provinces: ["กระบี่", "ชุมพร", "ตรัง", "นครศรีธรรมราช", "นราธิวาส",
                             "ปัตตานี", "พังงา", "พัทลุง", "ภูเก็ต", "ยะลา",
                             "ระนอง", "สงขลา", "สตูล", "สุราษฎร์ธานี"]
             }
         ];
 
-        // ===== เมนูในหน้าต่างจังหวัด (เพิ่มเมนูใหม่ได้ที่นี่) =====
-        const menus = [
-            {
-                id: "weather", icon: "🌤️", label: "สภาพอากาศ",
-                desc: "สภาพอากาศปัจจุบันของพื้นที่",
-                stats: () => [
-                    ["🌡️", "อุณหภูมิ", "-- °C"],
-                    ["💧", "ความชื้น", "-- %"],
-                    ["🌧️", "โอกาสฝนตก", "-- %"],
-                    ["🍃", "ความเร็วลม", "-- กม./ชม."]
+        // =========================================================
+        // 2) ข้อมูลดิน พืช แหล่งน้ำ (ภาพรวมระดับภาค)
+        // =========================================================
+        const regionInfo = {
+            north: {
+                soil: [
+                    ["🪨", "ลักษณะดินหลัก", "ดินร่วนและดินร่วนปนทรายในที่ราบหุบเขา ส่วนบนภูเขาเป็นดินตื้นและลาดชัน"],
+                    ["⚗️", "ค่า pH โดยประมาณ", "5.0–6.5 (กรดเล็กน้อยถึงกรดปานกลาง)"],
+                    ["🌿", "ความอุดมสมบูรณ์", "ปานกลาง ที่ราบลุ่มแม่น้ำดีกว่าพื้นที่ลาดชัน"],
+                    ["💦", "การระบายน้ำ", "ดี แต่พื้นที่ลาดชันเสี่ยงต่อการชะล้างหน้าดิน"]
+                ],
+                crops: [
+                    ["🌾", "พืชไร่", "ข้าว ข้าวโพดเลี้ยงสัตว์ ถั่วเหลือง"],
+                    ["🍊", "ไม้ผล", "ลำไย ลิ้นจี่ มะม่วง"],
+                    ["☕", "พืชบนที่สูง", "ชา กาแฟอาราบิก้า ผักและไม้ดอกเมืองหนาว"]
+                ],
+                water: [
+                    ["🏞️", "แม่น้ำสำคัญ", "ปิง วัง ยม น่าน กก อิง"],
+                    ["🚧", "เขื่อนสำคัญ", "สิริกิติ์ (อุตรดิตถ์) แม่งัดสมบูรณ์ชล (เชียงใหม่) กิ่วลม (ลำปาง)"]
                 ]
             },
-            {
-                id: "soil", icon: "🌱", label: "สภาพดิน",
-                desc: "ชนิดและคุณภาพของดินในจังหวัด",
-                stats: () => [
-                    ["🪨", "ชนิดดิน", "--"],
-                    ["⚗️", "ค่า pH", "--"],
-                    ["🌿", "ความอุดมสมบูรณ์", "--"],
-                    ["💦", "การระบายน้ำ", "--"]
+            northeast: {
+                soil: [
+                    ["🪨", "ลักษณะดินหลัก", "ดินทรายและดินร่วนปนทราย บางพื้นที่มีปัญหาดินเค็ม"],
+                    ["⚗️", "ค่า pH โดยประมาณ", "4.5–5.5 (เป็นกรด)"],
+                    ["🌿", "ความอุดมสมบูรณ์", "ค่อนข้างต่ำ อินทรียวัตถุน้อย"],
+                    ["💦", "การระบายน้ำ", "ระบายเร็ว อุ้มน้ำได้น้อย หน้าแล้งขาดน้ำง่าย"]
+                ],
+                crops: [
+                    ["🌾", "พืชไร่", "ข้าวหอมมะลิ มันสำปะหลัง อ้อย"],
+                    ["🌳", "ไม้ยืนต้น", "ยางพารา"],
+                    ["🥜", "พืชอื่น ๆ", "ถั่วลิสง หม่อน (เลี้ยงไหม)"]
+                ],
+                water: [
+                    ["🏞️", "แม่น้ำสำคัญ", "โขง มูล ชี สงคราม"],
+                    ["🚧", "เขื่อนสำคัญ", "อุบลรัตน์ (ขอนแก่น) ลำปาว (กาฬสินธุ์) สิรินธร (อุบลราชธานี) ลำตะคอง (นครราชสีมา)"]
                 ]
             },
-            {
-                id: "crops", icon: "🌾", label: "พืชที่เหมาะสม",
-                desc: "พืชที่เหมาะกับดินและอากาศของพื้นที่",
-                stats: () => [
-                    ["🌾", "พืชไร่", "--"],
-                    ["🍊", "ไม้ผล", "--"],
-                    ["🥬", "พืชผัก", "--"]
+            central: {
+                soil: [
+                    ["🪨", "ลักษณะดินหลัก", "ดินเหนียวจากตะกอนแม่น้ำ บางพื้นที่เป็นดินเปรี้ยว เช่น ทุ่งรังสิต"],
+                    ["⚗️", "ค่า pH โดยประมาณ", "5.5–7.0 ส่วนดินเปรี้ยวอาจต่ำกว่า 4.5"],
+                    ["🌿", "ความอุดมสมบูรณ์", "สูง เหมาะกับการทำนา"],
+                    ["💦", "การระบายน้ำ", "ระบายช้า น้ำท่วมขังได้ง่าย"]
+                ],
+                crops: [
+                    ["🌾", "พืชไร่", "ข้าว อ้อย"],
+                    ["🍊", "ไม้ผล", "มะม่วง ส้มโอ ฝรั่ง กล้วย"],
+                    ["🥬", "พืชผัก", "ผักกินใบ พืชสวนครัว"]
+                ],
+                water: [
+                    ["🏞️", "แม่น้ำสำคัญ", "เจ้าพระยา ท่าจีน ป่าสัก น้อย"],
+                    ["🚧", "เขื่อนสำคัญ", "เขื่อนเจ้าพระยา (ชัยนาท) ป่าสักชลสิทธิ์ (ลพบุรี)"]
                 ]
             },
-            {
-                id: "water", icon: "💧", label: "แหล่งน้ำ",
-                desc: "แม่น้ำ เขื่อน และแหล่งน้ำสำคัญ",
-                stats: () => [
-                    ["🏞️", "แม่น้ำสำคัญ", "--"],
-                    ["🚧", "เขื่อน / อ่างเก็บน้ำ", "--"]
+            east: {
+                soil: [
+                    ["🪨", "ลักษณะดินหลัก", "ดินร่วนปนทราย ดินลูกรัง บางพื้นที่ในจันทบุรีเป็นดินแดงจากหินบะซอลต์"],
+                    ["⚗️", "ค่า pH โดยประมาณ", "4.5–5.5 (เป็นกรด)"],
+                    ["🌿", "ความอุดมสมบูรณ์", "ปานกลาง"],
+                    ["💦", "การระบายน้ำ", "ดี"]
+                ],
+                crops: [
+                    ["🍈", "ไม้ผล", "ทุเรียน มังคุด เงาะ ลองกอง"],
+                    ["🌳", "ไม้ยืนต้น", "ยางพารา"],
+                    ["🌾", "พืชไร่", "มันสำปะหลัง อ้อย สับปะรด"]
+                ],
+                water: [
+                    ["🏞️", "แม่น้ำสำคัญ", "บางปะกง ปราจีนบุรี จันทบุรี ประแสร์"],
+                    ["🚧", "อ่างเก็บน้ำสำคัญ", "บางพระ (ชลบุรี) ดอกกราย หนองปลาไหล ประแสร์ (ระยอง)"]
                 ]
             },
-            {
-                id: "info", icon: "📍", label: "ข้อมูลทั่วไป",
-                desc: "ข้อมูลพื้นฐานของจังหวัด",
-                stats: (province, region) => [
-                    ["🏙️", "จังหวัด", province],
-                    ["🗺️", "ภูมิภาค", region.name]
+            west: {
+                soil: [
+                    ["🪨", "ลักษณะดินหลัก", "ดินร่วนและดินร่วนปนทรายตามที่ราบเชิงเขา ส่วนภูเขาหินปูนมีดินตื้น"],
+                    ["⚗️", "ค่า pH โดยประมาณ", "5.5–7.5 (ดินจากหินปูนค่อนข้างเป็นด่าง)"],
+                    ["🌿", "ความอุดมสมบูรณ์", "ปานกลาง"],
+                    ["💦", "การระบายน้ำ", "ดี"]
+                ],
+                crops: [
+                    ["🌾", "พืชไร่", "อ้อย มันสำปะหลัง ข้าวโพด"],
+                    ["🍍", "ไม้ผล", "สับปะรด มะพร้าว มะม่วง"],
+                    ["🥬", "พืชผัก", "พืชผักและพืชสวนในที่ราบลุ่มแม่กลอง"]
+                ],
+                water: [
+                    ["🏞️", "แม่น้ำสำคัญ", "แม่กลอง แควน้อย แควใหญ่ เมย เพชรบุรี"],
+                    ["🚧", "เขื่อนสำคัญ", "ศรีนครินทร์ วชิราลงกรณ (กาญจนบุรี) ภูมิพล (ตาก) แก่งกระจาน (เพชรบุรี)"]
+                ]
+            },
+            south: {
+                soil: [
+                    ["🪨", "ลักษณะดินหลัก", "ดินร่วนปนทรายถึงดินเหนียว ชายฝั่งเป็นดินทราย นราธิวาสมีพื้นที่ดินพรุ"],
+                    ["⚗️", "ค่า pH โดยประมาณ", "4.5–5.5 ส่วนดินพรุเป็นกรดจัด"],
+                    ["🌿", "ความอุดมสมบูรณ์", "ปานกลางถึงต่ำ เพราะฝนชะล้างธาตุอาหาร"],
+                    ["💦", "การระบายน้ำ", "ดี ยกเว้นพื้นที่พรุที่มีน้ำขังเกือบตลอดปี"]
+                ],
+                crops: [
+                    ["🌳", "ไม้ยืนต้น", "ยางพารา ปาล์มน้ำมัน"],
+                    ["🍈", "ไม้ผล", "ทุเรียน มังคุด ลองกอง เงาะ"],
+                    ["🥥", "พืชอื่น ๆ", "มะพร้าว กาแฟโรบัสต้า"]
+                ],
+                water: [
+                    ["🏞️", "แม่น้ำสำคัญ", "ตาปี ปากพนัง ปัตตานี โก-ลก"],
+                    ["🚧", "เขื่อนสำคัญ", "รัชชประภา (สุราษฎร์ธานี) บางลาง (ยะลา)"]
                 ]
             }
-        ];
+        };
 
-        let currentRegion = null;
-        let currentProvince = null;
+        // =========================================================
+        // 3) แหล่งข้อมูลจากภายนอก
+        // =========================================================
+        const GEO_BASE = "https://raw.githubusercontent.com/kongvut/thai-province-data/refs/heads/master/api/latest/";
 
-        // ===== สลับหน้าจอ =====
+        let geo = null;          // { provinces, districts, tambons }
+        let geoPromise = null;
+
+        // โหลดรายชื่อจังหวัด/อำเภอ/ตำบล (โหลดครั้งเดียวแล้วจำไว้)
+        function loadGeo() {
+            if (!geoPromise) {
+                const files = ["province.json", "district.json", "sub_district.json"];
+                geoPromise = Promise.all(files.map(f => fetchJSON(GEO_BASE + f)))
+                    .then(([p, d, s]) => {
+                        const alive = x => !x.deleted_at;
+                        geo = {
+                            provinces: p.filter(alive),
+                            districts: d.filter(alive),
+                            tambons: s.filter(alive)
+                        };
+                        return geo;
+                    })
+                    .catch(err => {
+                        geoPromise = null; // ให้ลองใหม่ได้
+                        throw err;
+                    });
+            }
+            return geoPromise;
+        }
+
+        async function fetchJSON(url) {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            return res.json();
+        }
+
+        // ตัวช่วยอ่านชื่อจากชุดข้อมูล
+        const thName = x => (x.name && x.name.th) || x.name_th || "";
+        const enName = x => (x.name && x.name.en) || x.name_en || "";
+        const prefixOf = (x, fallback) => (x.prefix && x.prefix.th) || fallback;
+
+        function esc(text) {
+            return String(text).replace(/[&<>"']/g, c => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            })[c]);
+        }
+
+        function districtsOf(provinceId) {
+            return geo.districts.filter(d => String(d.province_id) === String(provinceId));
+        }
+
+        function tambonsOf(districtId) {
+            return geo.tambons.filter(t => String(t.district_id) === String(districtId));
+        }
+
+        // =========================================================
+        // 4) สถานะการเลือก
+        // =========================================================
+        const state = {
+            region: null,
+            province: null,      // ชื่อจังหวัด (ภาษาไทย)
+            provinceRec: null,   // ข้อมูลจังหวัดจากชุดข้อมูล
+            district: null,
+            tambon: null,
+            level: "province",   // province | district | tambon
+            locPromise: null,
+            menu: null
+        };
+
+        function provinceTitle(name) {
+            return name === "กรุงเทพมหานคร" ? name : "จังหวัด" + name;
+        }
+
+        function shortPrefix(prefix) {
+            if (prefix === "อำเภอ") return "อ.";
+            if (prefix === "ตำบล") return "ต.";
+            return prefix;
+        }
+
+        // =========================================================
+        // 5) สลับหน้าจอ
+        // =========================================================
         function showScreen(id) {
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
             document.getElementById(id).classList.add("active");
             window.scrollTo(0, 0);
         }
 
-        // ===== สร้างการ์ดภูมิภาค =====
+        // =========================================================
+        // 6) หน้าเลือกภูมิภาค
+        // =========================================================
         function renderRegions() {
             const grid = document.getElementById("regionGrid");
             grid.innerHTML = "";
@@ -605,48 +928,467 @@
             });
         }
 
-        // ===== เปิดหน้าจังหวัดของภาคที่เลือก =====
-        function openRegion(region) {
-            currentRegion = region;
-            document.getElementById("regionTitle").textContent = region.icon + " " + region.name;
-            document.getElementById("regionSubtitle").textContent =
-                "เลือกจังหวัด (" + region.provinces.length + " จังหวัด)";
-            document.getElementById("searchInput").value = "";
-            renderProvinces("");
-            showScreen("provinceScreen");
+        // =========================================================
+        // 7) หน้ารายการ (ใช้ร่วมกันทั้งจังหวัด อำเภอ ตำบล)
+        // =========================================================
+        let listState = null;
+
+        function showList(opts) {
+            listState = opts;
+            document.getElementById("listTitle").textContent = opts.title;
+            document.getElementById("listSubtitle").textContent = opts.subtitle || "";
+            document.getElementById("listBack").textContent = opts.backLabel || "← ย้อนกลับ";
+
+            const actions = document.getElementById("listActions");
+            actions.innerHTML = "";
+            if (opts.skip) {
+                const btn = document.createElement("button");
+                btn.className = "skip-btn";
+                btn.textContent = opts.skip.label;
+                btn.addEventListener("click", opts.skip.fn);
+                actions.appendChild(btn);
+            }
+
+            const search = document.getElementById("listSearch");
+            search.value = "";
+            search.placeholder = opts.searchPlaceholder || "🔍 พิมพ์เพื่อค้นหา...";
+            search.style.display = opts.loading || opts.error ? "none" : "block";
+
+            renderList("");
+            showScreen("listScreen");
         }
 
-        // ===== สร้างการ์ดจังหวัด (กรองตามคำค้นหา) =====
-        function renderProvinces(keyword) {
-            const grid = document.getElementById("provinceGrid");
+        function renderList(keyword) {
+            const grid = document.getElementById("listGrid");
+            const msg = document.getElementById("listMsg");
             grid.innerHTML = "";
+            msg.innerHTML = "";
 
-            const list = currentRegion.provinces
-                .filter(p => p.includes(keyword.trim()))
-                .sort((a, b) => a.localeCompare(b, "th"));
+            if (listState.loading) {
+                msg.innerHTML = `<div class="loading"><span class="spinner"></span>${esc(listState.loading)}</div>`;
+                return;
+            }
 
-            list.forEach(name => {
+            if (listState.error) {
+                msg.innerHTML = `<div class="error-box">${esc(listState.error)}<br>
+                    <button class="ghost-btn" id="retryBtn">ลองใหม่</button></div>`;
+                document.getElementById("retryBtn").addEventListener("click", listState.retry);
+                return;
+            }
+
+            const list = listState.items
+                .filter(item => item.label.includes(keyword.trim()))
+                .sort((a, b) => a.label.localeCompare(b.label, "th"));
+
+            list.forEach(item => {
                 const card = document.createElement("button");
-                card.className = "card province";
-                card.textContent = name;
-                card.addEventListener("click", () => selectProvince(name));
+                card.className = "card item";
+                card.textContent = item.label;
+                card.addEventListener("click", () => listState.onSelect(item.data));
                 grid.appendChild(card);
             });
 
-            document.getElementById("emptyMsg").style.display = list.length ? "none" : "block";
+            if (!list.length) msg.textContent = "ไม่พบรายการที่ค้นหา";
         }
 
-        // ===== เลือกจังหวัด → เปิดหน้าต่างข้อมูล =====
-        function selectProvince(name) {
-            currentProvince = name;
-            document.getElementById("provinceTitle").textContent = "จังหวัด" + name;
-            document.getElementById("regionTag").textContent = currentRegion.icon + " " + currentRegion.name;
+        // เลือกภาค → รายชื่อจังหวัด
+        function openRegion(region) {
+            state.region = region;
+            showList({
+                title: region.icon + " " + region.name,
+                subtitle: "เลือกจังหวัด (" + region.provinces.length + " จังหวัด)",
+                backLabel: "← เลือกภาคอื่น",
+                back: () => showScreen("regionScreen"),
+                searchPlaceholder: "🔍 ค้นหาจังหวัด...",
+                items: region.provinces.map(p => ({ label: p, data: p })),
+                onSelect: selectProvince
+            });
+        }
+
+        // เลือกจังหวัด → รายชื่ออำเภอ
+        async function selectProvince(name) {
+            state.province = name;
+            state.provinceRec = null;
+            state.district = null;
+            state.tambon = null;
+
+            const isBkk = name === "กรุงเทพมหานคร";
+            const word = isBkk ? "เขต" : "อำเภอ";
+            const base = {
+                title: provinceTitle(name),
+                backLabel: "← เลือกจังหวัดอื่น",
+                back: () => openRegion(state.region),
+                skip: { label: "📍 ดูข้อมูลทั้งจังหวัด", fn: () => openDashboard("province") },
+                searchPlaceholder: "🔍 ค้นหา" + word + "...",
+                onSelect: selectDistrict
+            };
+
+            showList({ ...base, loading: "กำลังโหลดรายชื่อ" + word + "..." });
+
+            try {
+                await loadGeo();
+            } catch (err) {
+                if (state.province !== name) return;
+                showList({
+                    ...base,
+                    error: "โหลดรายชื่อ" + word + "ไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่ หรือกดดูข้อมูลทั้งจังหวัดได้เลย",
+                    retry: () => selectProvince(name)
+                });
+                return;
+            }
+
+            if (state.province !== name) return; // ผู้ใช้กดไปหน้าอื่นแล้ว
+
+            const rec = geo.provinces.find(p => thName(p) === name);
+            if (!rec) {
+                showList({ ...base, error: "ไม่พบรายชื่อ" + word + "ของจังหวัดนี้", retry: () => selectProvince(name) });
+                return;
+            }
+
+            state.provinceRec = rec;
+            const districts = districtsOf(rec.id);
+            showList({
+                ...base,
+                subtitle: "เลือก" + word + " (" + districts.length + " " + word + ")",
+                items: districts.map(d => ({ label: thName(d), data: d }))
+            });
+        }
+
+        // เลือกอำเภอ → รายชื่อตำบล
+        function selectDistrict(district) {
+            state.district = district;
+            state.tambon = null;
+
+            const dPrefix = prefixOf(district, "อำเภอ");
+            const tambons = tambonsOf(district.id);
+            const tWord = tambons.length ? prefixOf(tambons[0], "ตำบล") : "ตำบล";
+
+            showList({
+                title: dPrefix + thName(district),
+                subtitle: provinceTitle(state.province) + " · เลือก" + tWord + " (" + tambons.length + " " + tWord + ")",
+                backLabel: "← เลือก" + dPrefix + "อื่น",
+                back: () => selectProvince(state.province),
+                skip: { label: "📍 ดูข้อมูลทั้ง" + dPrefix, fn: () => openDashboard("district") },
+                searchPlaceholder: "🔍 ค้นหา" + tWord + "...",
+                items: tambons.map(t => ({ label: thName(t), data: t })),
+                onSelect: selectTambon
+            });
+        }
+
+        // เลือกตำบล → เปิดหน้าต่างข้อมูล
+        function selectTambon(tambon) {
+            state.tambon = tambon;
+            openDashboard("tambon");
+        }
+
+        // =========================================================
+        // 8) หาพิกัดของพื้นที่ที่เลือก
+        // =========================================================
+        function coordOf(t) {
+            const lat = parseFloat(t.lat);
+            const lon = parseFloat(t.long ?? t.lng ?? t.lon);
+            const ok = isFinite(lat) && isFinite(lon) && lat > 5 && lat < 21 && lon > 97 && lon < 106;
+            return ok ? { lat, lon } : null;
+        }
+
+        function averageCoord(tambons) {
+            const list = tambons.map(coordOf).filter(Boolean);
+            if (!list.length) return null;
+            return {
+                lat: list.reduce((s, c) => s + c.lat, 0) / list.length,
+                lon: list.reduce((s, c) => s + c.lon, 0) / list.length
+            };
+        }
+
+        async function geocodeProvince() {
+            const rec = state.provinceRec;
+            const query = rec ? enName(rec) : state.province;
+            const lang = rec ? "en" : "th";
+            const url = "https://geocoding-api.open-meteo.com/v1/search?count=1&countryCode=TH&language=" +
+                lang + "&name=" + encodeURIComponent(query);
+            const data = await fetchJSON(url);
+            if (!data.results || !data.results.length) return null;
+            return { lat: data.results[0].latitude, lon: data.results[0].longitude };
+        }
+
+        async function resolveLocation() {
+            let c = null;
+            let approx = false;
+
+            if (state.level === "tambon" && state.tambon) {
+                c = coordOf(state.tambon);
+                if (!c) approx = true;
+            }
+
+            if (!c && state.district) {
+                c = averageCoord(tambonsOf(state.district.id));
+            }
+
+            if (!c && state.provinceRec) {
+                const ids = new Set(districtsOf(state.provinceRec.id).map(d => String(d.id)));
+                c = averageCoord(geo.tambons.filter(t => ids.has(String(t.district_id))));
+                if (state.level !== "province") approx = true;
+            }
+
+            if (!c) {
+                c = await geocodeProvince();
+                if (state.level !== "province") approx = true;
+            }
+
+            if (!c) throw new Error("ไม่พบพิกัดของพื้นที่นี้");
+            return { ...c, approx };
+        }
+
+        // =========================================================
+        // 9) ดึงสภาพอากาศและค่าฝุ่นจาก Open-Meteo
+        // =========================================================
+        const apiCache = {};
+
+        function cached(key, loader) {
+            if (!apiCache[key]) {
+                apiCache[key] = loader().catch(err => {
+                    delete apiCache[key];
+                    throw err;
+                });
+            }
+            return apiCache[key];
+        }
+
+        function getWeather(loc) {
+            const url = "https://api.open-meteo.com/v1/forecast" +
+                "?latitude=" + loc.lat.toFixed(4) + "&longitude=" + loc.lon.toFixed(4) +
+                "&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m" +
+                "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,uv_index_max" +
+                "&timezone=Asia%2FBangkok&forecast_days=5";
+            return cached(url, () => fetchJSON(url));
+        }
+
+        function getAir(loc) {
+            const url = "https://air-quality-api.open-meteo.com/v1/air-quality" +
+                "?latitude=" + loc.lat.toFixed(4) + "&longitude=" + loc.lon.toFixed(4) +
+                "&current=pm2_5,pm10&timezone=Asia%2FBangkok";
+            return cached(url, () => fetchJSON(url));
+        }
+
+        // รหัสสภาพอากาศ → ไอคอนและคำอธิบาย
+        function weatherText(code) {
+            if (code === 0) return ["☀️", "ท้องฟ้าแจ่มใส"];
+            if (code === 1) return ["🌤️", "มีเมฆเล็กน้อย"];
+            if (code === 2) return ["⛅", "มีเมฆบางส่วน"];
+            if (code === 3) return ["☁️", "เมฆมาก"];
+            if (code === 45 || code === 48) return ["🌫️", "มีหมอก"];
+            if (code >= 51 && code <= 57) return ["🌦️", "ฝนปรอย"];
+            if (code === 61 || code === 66) return ["🌧️", "ฝนตกเล็กน้อย"];
+            if (code === 63) return ["🌧️", "ฝนตกปานกลาง"];
+            if (code === 65 || code === 67) return ["🌧️", "ฝนตกหนัก"];
+            if (code >= 71 && code <= 77) return ["❄️", "หิมะ"];
+            if (code === 80) return ["🌦️", "ฝนตกเป็นช่วง ๆ"];
+            if (code === 81) return ["🌧️", "ฝนตกเป็นช่วง ๆ ปานกลาง"];
+            if (code === 82) return ["⛈️", "ฝนตกหนักเป็นช่วง ๆ"];
+            if (code >= 95) return ["⛈️", "พายุฝนฟ้าคะนอง"];
+            return ["🌡️", "ไม่ทราบสภาพอากาศ"];
+        }
+
+        // เกณฑ์ PM2.5 ของประเทศไทย
+        function pmLevel(pm) {
+            if (pm <= 15)   return { text: "คุณภาพอากาศดีมาก", color: "#4fc3f7", tip: "เหมาะกับกิจกรรมกลางแจ้งและการท่องเที่ยว" };
+            if (pm <= 25)   return { text: "คุณภาพอากาศดี", color: "#66bb6a", tip: "ทำกิจกรรมกลางแจ้งได้ตามปกติ" };
+            if (pm <= 37.5) return { text: "ปานกลาง", color: "#ffee58", tip: "ผู้ที่ต้องดูแลสุขภาพเป็นพิเศษควรลดกิจกรรมกลางแจ้ง" };
+            if (pm <= 75)   return { text: "เริ่มมีผลกระทบต่อสุขภาพ", color: "#ffa726", tip: "ควรสวมหน้ากากป้องกันฝุ่นและลดเวลาอยู่กลางแจ้ง" };
+            return { text: "มีผลกระทบต่อสุขภาพ", color: "#ef5350", tip: "ควรงดกิจกรรมกลางแจ้งและสวมหน้ากากป้องกันฝุ่น" };
+        }
+
+        function formatTime(iso) {
+            return iso ? iso.split("T")[1] + " น." : "-";
+        }
+
+        function dayName(dateStr, index) {
+            if (index === 0) return "วันนี้";
+            const d = new Date(dateStr + "T00:00:00");
+            return d.toLocaleDateString("th-TH", { weekday: "short", day: "numeric", month: "short" });
+        }
+
+        const SOURCE_NOTE = 'ข้อมูลจาก <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> (CC BY 4.0)';
+        const STATIC_NOTE = "* ข้อมูลนี้เป็นภาพรวมระดับภาค ควรตรวจสอบรายละเอียดของพื้นที่กับกรมพัฒนาที่ดินอีกครั้ง";
+
+        function approxNote(loc) {
+            return loc.approx ? "<br>* ไม่มีพิกัดของพื้นที่นี้โดยตรง จึงใช้พิกัดของพื้นที่ใกล้เคียงแทน" : "";
+        }
+
+        function statsHTML(list, isText) {
+            return `<div class="stats${isText ? " text" : ""}">` + list.map(([icon, label, value]) => `
+                <div class="stat">
+                    <div class="s-icon">${icon}</div>
+                    <div class="s-label">${esc(label)}</div>
+                    <div class="s-value">${esc(value)}</div>
+                </div>`).join("") + "</div>";
+        }
+
+        // =========================================================
+        // 10) เมนูในหน้าต่างข้อมูล (เพิ่มเมนูใหม่ได้ที่นี่)
+        // =========================================================
+        const menus = [
+            {
+                id: "weather", icon: "🌤️", label: "สภาพอากาศ",
+                desc: "สภาพอากาศตอนนี้และพยากรณ์ 5 วัน",
+                async render() {
+                    const loc = await state.locPromise;
+                    const w = await getWeather(loc);
+                    const c = w.current;
+                    const d = w.daily;
+                    const [icon, text] = weatherText(c.weather_code);
+
+                    const days = d.time.map((date, i) => {
+                        const [dIcon] = weatherText(d.weather_code[i]);
+                        return `
+                            <div class="day">
+                                <div class="d-name">${dayName(date, i)}</div>
+                                <div class="d-icon">${dIcon}</div>
+                                <div class="d-temp">${Math.round(d.temperature_2m_max[i])}° / ${Math.round(d.temperature_2m_min[i])}°</div>
+                                <div class="d-rain">🌧️ ${d.precipitation_probability_max[i] ?? "-"}%</div>
+                            </div>`;
+                    }).join("");
+
+                    return `
+                        <div class="hero">
+                            <div class="h-icon">${icon}</div>
+                            <div>
+                                <div class="h-temp">${Math.round(c.temperature_2m)}°C</div>
+                                <div class="h-text">${text}</div>
+                                <div class="h-sub">รู้สึกเหมือน ${Math.round(c.apparent_temperature)}°C · อัปเดต ${formatTime(c.time)}</div>
+                            </div>
+                        </div>
+                        ${statsHTML([
+                            ["💧", "ความชื้น", c.relative_humidity_2m + " %"],
+                            ["🌧️", "โอกาสฝนตกวันนี้", (d.precipitation_probability_max[0] ?? "-") + " %"],
+                            ["☔", "ปริมาณฝนตอนนี้", c.precipitation + " มม."],
+                            ["🍃", "ความเร็วลม", Math.round(c.wind_speed_10m) + " กม./ชม."],
+                            ["🔆", "ดัชนี UV สูงสุดวันนี้", d.uv_index_max[0] ?? "-"]
+                        ])}
+                        <div class="section-title">พยากรณ์ 5 วัน</div>
+                        <div class="forecast">${days}</div>
+                        <p class="note">${SOURCE_NOTE}${approxNote(loc)}</p>
+                    `;
+                }
+            },
+            {
+                id: "air", icon: "😷", label: "คุณภาพอากาศ",
+                desc: "ค่าฝุ่น PM2.5 และ PM10 ตอนนี้",
+                async render() {
+                    const loc = await state.locPromise;
+                    const a = await getAir(loc);
+                    const pm25 = a.current.pm2_5;
+                    const lv = pmLevel(pm25);
+
+                    return `
+                        <div class="hero">
+                            <div class="h-icon">😷</div>
+                            <div>
+                                <div class="h-sub">PM2.5 (ไมโครกรัม/ลบ.ม.)</div>
+                                <div class="h-temp">${Math.round(pm25)}</div>
+                                <span class="aqi-badge" style="background:${lv.color}">${lv.text}</span>
+                            </div>
+                        </div>
+                        ${statsHTML([
+                            ["🌫️", "PM10", Math.round(a.current.pm10) + " มคก./ลบ.ม."],
+                            ["💡", "คำแนะนำ", lv.tip],
+                            ["🕒", "อัปเดต", formatTime(a.current.time)]
+                        ])}
+                        <p class="note">${SOURCE_NOTE} · เป็นค่าประมาณจากแบบจำลอง
+                            ดูค่าจากสถานีตรวจวัดจริงได้ที่ <a href="https://air4thai.pcd.go.th/" target="_blank" rel="noopener">Air4Thai</a>${approxNote(loc)}</p>
+                    `;
+                }
+            },
+            {
+                id: "soil", icon: "🌱", label: "สภาพดิน",
+                desc: "ลักษณะและคุณภาพของดินในพื้นที่",
+                render() {
+                    return statsHTML(regionInfo[state.region.key].soil, true) +
+                        `<p class="note">${STATIC_NOTE}</p>`;
+                }
+            },
+            {
+                id: "crops", icon: "🌾", label: "พืชที่เหมาะสม",
+                desc: "พืชที่นิยมปลูกและเหมาะกับดินและอากาศของพื้นที่",
+                render() {
+                    return statsHTML(regionInfo[state.region.key].crops, true) +
+                        `<p class="note">${STATIC_NOTE}</p>`;
+                }
+            },
+            {
+                id: "water", icon: "💧", label: "แหล่งน้ำ",
+                desc: "แม่น้ำ เขื่อน และแหล่งน้ำสำคัญของภาค",
+                render() {
+                    return statsHTML(regionInfo[state.region.key].water, true) +
+                        `<p class="note">* ข้อมูลภาพรวมระดับภาค</p>`;
+                }
+            },
+            {
+                id: "info", icon: "📍", label: "ข้อมูลทั่วไป",
+                desc: "ข้อมูลพื้นฐานของพื้นที่ที่เลือก",
+                async render() {
+                    const list = [
+                        ["🗺️", "ภูมิภาค", state.region.name],
+                        ["🏙️", "จังหวัด", state.province]
+                    ];
+                    if (state.district) {
+                        list.push(["🏘️", prefixOf(state.district, "อำเภอ"), thName(state.district)]);
+                    }
+                    if (state.tambon) {
+                        list.push(["🏡", prefixOf(state.tambon, "ตำบล"), thName(state.tambon)]);
+                        if (state.tambon.zip_code) list.push(["📮", "รหัสไปรษณีย์", state.tambon.zip_code]);
+                    }
+                    try {
+                        const loc = await state.locPromise;
+                        list.push(["🧭", "พิกัด", loc.lat.toFixed(4) + ", " + loc.lon.toFixed(4)]);
+                    } catch (e) {
+                        // ไม่มีพิกัดก็ไม่เป็นไร
+                    }
+                    return statsHTML(list);
+                }
+            }
+        ];
+
+        // =========================================================
+        // 11) หน้าต่างข้อมูล
+        // =========================================================
+        function openDashboard(level) {
+            state.level = level;
+            if (level === "province") {
+                state.district = null;
+                state.tambon = null;
+            }
+            if (level === "district") {
+                state.tambon = null;
+            }
+
+            // หัวหน้าต่าง: ชื่อจังหวัด + เส้นทางอำเภอ/ตำบล
+            document.getElementById("provinceTitle").textContent = provinceTitle(state.province);
+            const path = [];
+            if (state.district) path.push(shortPrefix(prefixOf(state.district, "อำเภอ")) + thName(state.district));
+            if (state.tambon) path.push(shortPrefix(prefixOf(state.tambon, "ตำบล")) + thName(state.tambon));
+            document.getElementById("placePath").textContent = path.join(" › ");
+            document.getElementById("regionTag").textContent = state.region.icon + " " + state.region.name;
+
+            // ปุ่มย้อนกลับไปหน้ารายการที่มา
+            const backBtn = document.getElementById("resultBack");
+            if (level === "province") {
+                backBtn.textContent = "← กลับไปเลือกอำเภอ";
+                backBtn.onclick = () => selectProvince(state.province);
+            } else {
+                const district = state.district;
+                backBtn.textContent = "← กลับไปเลือกตำบล";
+                backBtn.onclick = () => selectDistrict(district);
+            }
+
+            state.locPromise = resolveLocation();
+            state.locPromise.catch(() => {}); // กัน error ค้าง ถ้ายังไม่มีเมนูไหนรอใช้
+
             renderSidebar();
             openMenu("weather");
             showScreen("resultScreen");
         }
 
-        // ===== สร้างเมนูด้านซ้าย =====
         function renderSidebar() {
             const sidebar = document.getElementById("sidebar");
             sidebar.innerHTML = "";
@@ -660,49 +1402,72 @@
             });
         }
 
-        // ===== แสดงผลด้านขวาตามเมนูที่เลือก =====
-        function openMenu(id) {
+        let menuToken = 0;
+
+        async function openMenu(id) {
             const menu = menus.find(m => m.id === id);
+            const token = ++menuToken;
+            state.menu = id;
 
             // ไฮไลต์เมนูที่กำลังดูอยู่
             document.querySelectorAll(".menu-item").forEach(item => {
                 item.classList.toggle("active", item.dataset.id === id);
             });
 
-            const stats = menu.stats(currentProvince, currentRegion)
-                .map(([icon, label, value]) => `
-                    <div class="stat">
-                        <div class="s-icon">${icon}</div>
-                        <div class="s-label">${label}</div>
-                        <div class="s-value">${value}</div>
-                    </div>
-                `).join("");
+            const placeName = [provinceTitle(state.province), document.getElementById("placePath").textContent]
+                .filter(Boolean).join(" › ");
 
             const content = document.getElementById("content");
             content.innerHTML = `
-                <div class="breadcrumb">จังหวัด${currentProvince} › ${menu.label}</div>
+                <div class="breadcrumb">${esc(placeName)} › ${menu.label}</div>
                 <div class="now-viewing"><span class="dot"></span>กำลังดู</div>
                 <h3>${menu.icon} ${menu.label}</h3>
                 <p class="desc">${menu.desc}</p>
-                <div class="stats">${stats}</div>
-                ${id === "info" ? "" : '<p class="note">* ช่อง "--" จะแสดงข้อมูลจริงเมื่อเชื่อมต่อแหล่งข้อมูลแล้ว</p>'}
+                <div id="menuBody"><div class="loading"><span class="spinner"></span>กำลังโหลดข้อมูล...</div></div>
             `;
 
-            // เล่นแอนิเมชันจางเข้าทุกครั้งที่เปลี่ยนเมนู
             content.classList.remove("fade");
             void content.offsetWidth;
             content.classList.add("fade");
+
+            let html;
+            try {
+                html = await menu.render();
+            } catch (err) {
+                html = `<div class="error-box">โหลดข้อมูลไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่<br>
+                        <button class="ghost-btn" id="menuRetry">ลองใหม่</button></div>`;
+                if (token === menuToken) {
+                    document.getElementById("menuBody").innerHTML = html;
+                    document.getElementById("menuRetry").addEventListener("click", () => {
+                        state.locPromise = resolveLocation();
+                        state.locPromise.catch(() => {});
+                        openMenu(id);
+                    });
+                }
+                return;
+            }
+
+            // ถ้าผู้ใช้กดเมนูอื่นไปแล้ว ไม่ต้องแสดงผลเก่า
+            if (token !== menuToken) return;
+            document.getElementById("menuBody").innerHTML = html;
         }
 
-        // ===== ผูกปุ่มต่าง ๆ =====
-        document.getElementById("startBtn").addEventListener("click", () => showScreen("regionScreen"));
-
-        document.querySelectorAll("[data-go]").forEach(btn => {
-            btn.addEventListener("click", () => showScreen(btn.dataset.go));
+        // =========================================================
+        // 12) ผูกปุ่มต่าง ๆ
+        // =========================================================
+        document.getElementById("startBtn").addEventListener("click", () => {
+            showScreen("regionScreen");
+            loadGeo().catch(() => {}); // เริ่มโหลดรายชื่ออำเภอ/ตำบลไว้ล่วงหน้า
         });
 
-        document.getElementById("searchInput").addEventListener("input", e => {
-            renderProvinces(e.target.value);
+        document.getElementById("regionBack").addEventListener("click", () => showScreen("home"));
+
+        document.getElementById("listBack").addEventListener("click", () => {
+            if (listState && listState.back) listState.back();
+        });
+
+        document.getElementById("listSearch").addEventListener("input", e => {
+            renderList(e.target.value);
         });
 
         renderRegions();
