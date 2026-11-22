@@ -1514,16 +1514,36 @@
         // =========================================================
         // 9) ดึงสภาพอากาศและค่าฝุ่นจาก Open-Meteo
         // =========================================================
+        // อัปเดตข้อมูลอากาศและค่าฝุ่นทุก 20 นาที
+        const REFRESH_MS = 20 * 60 * 1000;
         const apiCache = {};
 
+        // จำผลไว้ ถ้าเก่ากว่า 20 นาทีจะดึงใหม่
         function cached(key, loader) {
-            if (!apiCache[key]) {
-                apiCache[key] = loader().catch(err => {
-                    delete apiCache[key];
-                    throw err;
-                });
+            const hit = apiCache[key];
+            if (!hit || Date.now() - hit.time > REFRESH_MS - 30 * 1000) {
+                const entry = { time: Date.now() };
+                entry.promise = loader()
+                    .then(data => {
+                        data._fetchedAt = Date.now();
+                        return data;
+                    })
+                    .catch(err => {
+                        if (apiCache[key] === entry) delete apiCache[key];
+                        throw err;
+                    });
+                apiCache[key] = entry;
             }
-            return apiCache[key];
+            return apiCache[key].promise;
+        }
+
+        function clockTime(ms) {
+            const d = new Date(ms);
+            return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0") + " น.";
+        }
+
+        function liveNote(data) {
+            return "🔄 อัปเดตอัตโนมัติทุก 20 นาที · ดึงข้อมูลล่าสุดเมื่อ " + clockTime(data._fetchedAt) + "<br>";
         }
 
         function getWeather(loc) {
@@ -1601,7 +1621,7 @@
         // =========================================================
         const menus = [
             {
-                id: "weather", icon: "🌤️", label: "สภาพอากาศ",
+                id: "weather", icon: "🌤️", label: "สภาพอากาศ", live: true,
                 desc: "สภาพอากาศตอนนี้และพยากรณ์ 5 วัน",
                 async render() {
                     const loc = await state.locPromise;
@@ -1639,12 +1659,12 @@
                         ])}
                         <div class="section-title">พยากรณ์ 5 วัน</div>
                         <div class="forecast">${days}</div>
-                        <p class="note">${SOURCE_NOTE}${approxNote(loc)}</p>
+                        <p class="note">${liveNote(w)}${SOURCE_NOTE}${approxNote(loc)}</p>
                     `;
                 }
             },
             {
-                id: "air", icon: "😷", label: "คุณภาพอากาศ",
+                id: "air", icon: "😷", label: "คุณภาพอากาศ", live: true,
                 desc: "ค่าฝุ่น PM2.5 และ PM10 ตอนนี้",
                 async render() {
                     const loc = await state.locPromise;
@@ -1666,7 +1686,7 @@
                             ["💡", "คำแนะนำ", lv.tip],
                             ["🕒", "อัปเดต", formatTime(a.current.time)]
                         ])}
-                        <p class="note">${SOURCE_NOTE} · เป็นค่าประมาณจากแบบจำลอง
+                        <p class="note">${liveNote(a)}${SOURCE_NOTE} · เป็นค่าประมาณจากแบบจำลอง
                             ดูค่าจากสถานีตรวจวัดจริงได้ที่ <a href="https://air4thai.pcd.go.th/" target="_blank" rel="noopener">Air4Thai</a>${approxNote(loc)}</p>
                     `;
                 }
@@ -2157,7 +2177,40 @@
             // ถ้าผู้ใช้กดเมนูอื่นไปแล้ว ไม่ต้องแสดงผลเก่า
             if (token !== menuToken) return;
             document.getElementById("menuBody").innerHTML = html;
+            state.renderedAt = Date.now();
         }
+
+        // ===== อัปเดตอัตโนมัติ =====
+        function infoIsVisible() {
+            const onResult = document.getElementById("resultScreen").classList.contains("active");
+            const onMapSplit = document.getElementById("mapScreen").classList.contains("active") &&
+                document.getElementById("mapLayout").classList.contains("split");
+            return onResult || onMapSplit;
+        }
+
+        // เช็คทุก 1 นาที ถ้าข้อมูลที่แสดงอยู่เก่าครบ 20 นาทีแล้วจะดึงใหม่ (ไม่กระพริบหน้าจอ)
+        async function refreshLive() {
+            const menu = menus.find(m => m.id === state.menu);
+            if (!menu || !menu.live || !infoIsVisible()) return;
+            if (!state.renderedAt || Date.now() - state.renderedAt < REFRESH_MS) return;
+
+            const token = menuToken;
+            try {
+                const html = await menu.render();
+                if (token !== menuToken) return;
+                document.getElementById("menuBody").innerHTML = html;
+                state.renderedAt = Date.now();
+            } catch (err) {
+                // เน็ตหลุดชั่วคราว: คงข้อมูลเดิมไว้ แล้วลองใหม่รอบถัดไป
+            }
+        }
+
+        setInterval(refreshLive, 60 * 1000);
+
+        // กลับมาที่แท็บนี้หลังจากไปทำอย่างอื่น ให้เช็คทันที
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden) refreshLive();
+        });
 
         // =========================================================
         // 13) ผูกปุ่มต่าง ๆ
