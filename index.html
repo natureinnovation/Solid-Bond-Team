@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nature Innovation</title>
+    <!-- โหมดสว่าง/มืด: โหลดค่าที่เคยเลือกไว้ก่อนแสดงหน้าเว็บ จะได้ไม่กระพริบ -->
+    <meta name="color-scheme" content="light dark">
+    <script>
+        try {
+            if (localStorage.getItem("theme") === "light") document.documentElement.classList.add("light");
+        } catch (e) {}
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
@@ -850,6 +857,7 @@
         .leaflet-container {
             font-family: "Prompt", sans-serif;
         }
+
         /* ทำให้แผนที่เป็นโทนมืด เข้ากับธีม */
         .leaflet-tile-pane {
             filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.6);
@@ -952,9 +960,286 @@
                 padding: 22px 18px;
             }
         }
+
+        /* =========================================================
+           สวิตช์โหมด + โหมดสว่าง
+           ========================================================= */
+        html {
+            color-scheme: dark;
+        }
+
+        html.light {
+            color-scheme: light;
+            background: #f1f8e9;
+        }
+
+        /* สวิตช์สองฝั่ง: มืด | สว่าง (ฝั่งที่เป็นสีเขียวคือโหมดที่ใช้อยู่) */
+        .theme-switch {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            z-index: 2000;
+            display: flex;
+            gap: 4px;
+            padding: 4px;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(200, 230, 201, 0.3);
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+        }
+
+        .theme-switch button {
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: #c8e6c9;
+            background: transparent;
+            border: none;
+            border-radius: 50px;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        .theme-switch button.active {
+            color: #ffffff;
+            font-weight: 500;
+            background: linear-gradient(to bottom, #6a9f4e, #4a7c36);
+        }
+
+        html.light .theme-switch {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(46, 125, 50, 0.3);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        html.light .theme-switch button {
+            color: #2e5d34;
+        }
+
+        html.light .theme-switch button.active {
+            color: #ffffff;
+        }
+
+        /* พื้นหลังสว่าง: ไล่สีเขียวอ่อน ยังขยับได้เหมือนเดิม */
+        html.light body {
+            color: #1b3a24;
+            background: linear-gradient(to top,
+                #f9fbe7 0%, #e8f5e9 20%, #c8e6c9 40%, #aed581 50%,
+                #c8e6c9 60%, #e8f5e9 80%, #f9fbe7 100%);
+            background-size: 100% 200%;
+            background-attachment: fixed;
+        }
+
+        html.light a {
+            color: #33691e;
+        }
+
+        html.light h1 {
+            text-shadow: 0 4px 16px rgba(255, 255, 255, 0.6);
+        }
+
+        html.light .lead,
+        html.light .subtitle,
+        html.light .card .count,
+        html.light .place-path,
+        html.light .breadcrumb,
+        html.light .content .desc,
+        html.light .stat .s-label,
+        html.light .day .d-name,
+        html.light .day .d-rain,
+        html.light .hero .h-sub,
+        html.light .list-msg,
+        html.light .loading,
+        html.light .map-crumb {
+            color: #4e6e52;
+        }
+
+        html.light .note {
+            color: #5f7d63;
+        }
+
+        html.light .start-btn {
+            box-shadow:
+                0 10px 25px rgba(27, 58, 36, 0.25),
+                0 25px 60px rgba(27, 58, 36, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        html.light .back-btn,
+        html.light .ghost-btn {
+            color: #2e5d34;
+            border-color: rgba(46, 125, 50, 0.35);
+        }
+
+        html.light .back-btn:hover,
+        html.light .ghost-btn:hover {
+            background: rgba(139, 195, 74, 0.2);
+        }
+
+        html.light .skip-btn {
+            box-shadow: 0 6px 16px rgba(27, 58, 36, 0.2);
+        }
+
+        html.light .card {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(46, 125, 50, 0.15);
+        }
+
+        html.light .card:hover {
+            background: rgba(220, 237, 200, 0.9);
+            border-color: rgba(85, 139, 47, 0.5);
+            box-shadow: 0 15px 35px rgba(27, 58, 36, 0.15);
+        }
+
+        html.light .map-card {
+            background: linear-gradient(to right, rgba(174, 213, 129, 0.6), rgba(255, 255, 255, 0.7));
+            border-color: rgba(85, 139, 47, 0.4);
+        }
+
+        html.light .map-card .arrow {
+            color: #558b2f;
+        }
+
+        html.light .search {
+            color: #1b3a24;
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(46, 125, 50, 0.25);
+        }
+
+        html.light .search::placeholder {
+            color: rgba(46, 93, 52, 0.5);
+        }
+
+        html.light .spinner {
+            border-color: rgba(85, 139, 47, 0.2);
+            border-top-color: #558b2f;
+        }
+
+        html.light .error-box {
+            color: #e65100;
+        }
+
+        /* หน้าต่างข้อมูล */
+        html.light .window {
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(46, 125, 50, 0.15);
+            box-shadow: 0 25px 60px rgba(27, 58, 36, 0.15);
+        }
+
+        html.light .window-header {
+            background: rgba(174, 213, 129, 0.3);
+            border-bottom-color: rgba(46, 125, 50, 0.15);
+        }
+
+        html.light .region-tag {
+            color: #33691e;
+            border-color: rgba(85, 139, 47, 0.4);
+        }
+
+        html.light .sidebar {
+            border-color: rgba(46, 125, 50, 0.12);
+        }
+
+        html.light .menu-item {
+            color: #2e5d34;
+        }
+
+        html.light .menu-item:hover {
+            background: rgba(0, 0, 0, 0.04);
+            color: #1b3a24;
+        }
+
+        html.light .menu-item.active {
+            background: rgba(174, 213, 129, 0.45);
+            color: #1b3a24;
+        }
+
+        html.light .menu-item.active::before {
+            background: #558b2f;
+        }
+
+        html.light .now-viewing {
+            color: #33691e;
+            background: rgba(139, 195, 74, 0.2);
+            border-color: rgba(85, 139, 47, 0.4);
+        }
+
+        html.light .now-viewing .dot {
+            background: #558b2f;
+            box-shadow: 0 0 8px #8bc34a;
+        }
+
+        html.light .stat,
+        html.light .day {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(46, 125, 50, 0.12);
+        }
+
+        html.light .hero {
+            background: rgba(174, 213, 129, 0.3);
+            border-color: rgba(85, 139, 47, 0.3);
+        }
+
+        /* แผนที่โหมดสว่าง: ใช้สีแผนที่ปกติ */
+        html.light #map {
+            background: #e8eee4;
+        }
+
+        html.light .leaflet-tile-pane {
+            filter: none;
+        }
+
+        html.light .map-pane {
+            border-color: rgba(46, 125, 50, 0.2);
+            box-shadow: 0 25px 60px rgba(27, 58, 36, 0.15);
+        }
+
+        html.light .map-crumb button {
+            color: #33691e;
+        }
+
+        html.light .map-crumb .current {
+            color: #1b3a24;
+        }
+
+        html.light .map-hint,
+        html.light .map-select,
+        html.light .legend {
+            color: #1b3a24;
+            background: rgba(255, 255, 255, 0.88);
+            border-color: rgba(46, 125, 50, 0.25);
+        }
+
+        html.light .map-select option {
+            background: #ffffff;
+        }
+
+        html.light .map-loading {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        html.light .leaflet-tooltip.map-tip {
+            color: #1b3a24;
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(46, 125, 50, 0.3);
+        }
+
+        /* เว้นที่ด้านบนบนมือถือ ไม่ให้สวิตช์โหมดทับปุ่มย้อนกลับ */
+        @media (max-width: 600px) {
+            .screen {
+                padding-top: 64px;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <!-- สวิตช์โหมดมืด/สว่าง -->
+    <div class="theme-switch">
+        <button data-theme="dark">🌙 มืด</button>
+        <button data-theme="light">☀️ สว่าง</button>
+    </div>
 
     <!-- หน้าแรก -->
     <section id="home" class="screen active">
@@ -2233,6 +2518,28 @@
             renderList(e.target.value);
         });
 
+        // ===== สวิตช์โหมดมืด/สว่าง =====
+        function setTheme(theme) {
+            document.documentElement.classList.toggle("light", theme === "light");
+            try {
+                localStorage.setItem("theme", theme);
+            } catch (e) {}
+            updateThemeSwitch();
+        }
+
+        // ไฮไลต์ปุ่มของโหมดที่ใช้อยู่ตอนนี้
+        function updateThemeSwitch() {
+            const current = document.documentElement.classList.contains("light") ? "light" : "dark";
+            document.querySelectorAll(".theme-switch button").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.theme === current);
+            });
+        }
+
+        document.querySelectorAll(".theme-switch button").forEach(btn => {
+            btn.addEventListener("click", () => setTheme(btn.dataset.theme));
+        });
+
+        updateThemeSwitch();
         renderRegions();
     </script>
 
