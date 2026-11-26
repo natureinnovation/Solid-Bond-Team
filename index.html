@@ -1225,6 +1225,265 @@
             border-color: rgba(46, 125, 50, 0.3);
         }
 
+        /* =========================================================
+           หน้าแรก 2 ปุ่ม + หน้าภัยธรรมชาติ
+           ========================================================= */
+        .home-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+        }
+
+        .start-btn.alt {
+            background: linear-gradient(to bottom, #b8863b, #8d6428);
+        }
+
+        .start-btn.alt:hover {
+            background: linear-gradient(to bottom, #c9974a, #9c7233);
+        }
+
+        .d-title {
+            margin: 0;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tabs button {
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: #c8e6c9;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(200, 230, 201, 0.25);
+            border-radius: 50px;
+            padding: 9px 18px;
+            cursor: pointer;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        .tabs button:hover {
+            background: rgba(106, 159, 78, 0.2);
+        }
+
+        .tabs button.active {
+            color: #ffffff;
+            font-weight: 500;
+            background: linear-gradient(to bottom, #6a9f4e, #4a7c36);
+            border-color: transparent;
+        }
+
+        .risk-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        #riskMap {
+            height: 72vh;
+            min-height: 420px;
+            background: #0b1a10;
+        }
+
+        .risk-panel {
+            padding: 22px;
+            max-height: 72vh;
+            overflow-y: auto;
+        }
+
+        .risk-panel h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .risk-panel .desc {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: #c8e6c9;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .risk-panel .note {
+            margin-top: 16px;
+        }
+
+        .level-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .level-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(200, 230, 201, 0.15);
+        }
+
+        .lv-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .risk-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .risk-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            font-family: inherit;
+            color: inherit;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(200, 230, 201, 0.1);
+            border-radius: 14px;
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .risk-row:hover,
+        .risk-row.selected {
+            background: rgba(106, 159, 78, 0.18);
+            border-color: rgba(139, 195, 74, 0.45);
+        }
+
+        .risk-row .r-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .risk-row .r-name {
+            font-weight: 500;
+        }
+
+        .risk-row .r-sub {
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: #a5d6a7;
+        }
+
+        .level-badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1b1b1b;
+            padding: 3px 10px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        .risk-detail {
+            background: rgba(106, 159, 78, 0.12);
+            border: 1px solid rgba(139, 195, 74, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .risk-detail h4 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .risk-detail ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.9rem;
+            font-weight: 300;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .risk-detail .skip-btn {
+            font-size: 0.85rem;
+            padding: 8px 16px;
+        }
+
+        .risk-empty {
+            text-align: center;
+            font-weight: 300;
+            color: #a5d6a7;
+            padding: 24px 0;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 860px) {
+            .risk-layout {
+                grid-template-columns: 1fr;
+            }
+
+            #riskMap {
+                height: 50vh;
+                min-height: 300px;
+            }
+
+            .risk-panel {
+                max-height: none;
+            }
+        }
+
+        /* โหมดสว่างของหน้าภัยธรรมชาติ */
+        html.light #riskMap {
+            background: #e8eee4;
+        }
+
+        html.light .tabs button {
+            color: #2e5d34;
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(46, 125, 50, 0.25);
+        }
+
+        html.light .tabs button.active {
+            color: #ffffff;
+            background: linear-gradient(to bottom, #6a9f4e, #4a7c36);
+        }
+
+        html.light .risk-panel .desc,
+        html.light .risk-row .r-sub,
+        html.light .risk-empty {
+            color: #4e6e52;
+        }
+
+        html.light .level-chip,
+        html.light .risk-row {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(46, 125, 50, 0.15);
+        }
+
+        html.light .risk-row:hover,
+        html.light .risk-row.selected {
+            background: rgba(220, 237, 200, 0.95);
+            border-color: rgba(85, 139, 47, 0.5);
+        }
+
+        html.light .risk-detail {
+            background: rgba(174, 213, 129, 0.3);
+            border-color: rgba(85, 139, 47, 0.3);
+        }
+
         /* เว้นที่ด้านบนบนมือถือ ไม่ให้สวิตช์โหมดทับปุ่มย้อนกลับ */
         @media (max-width: 600px) {
             .screen {
@@ -1245,7 +1504,10 @@
     <section id="home" class="screen active">
         <h1>🌿 Nature Innovation</h1>
         <p class="lead">เช็คสภาพอากาศและสภาพดินของแต่ละจังหวัดทั่วประเทศไทย</p>
-        <button class="start-btn" id="startBtn">เริ่มต้นใช้งาน</button>
+        <div class="home-actions">
+            <button class="start-btn" id="startBtn">🗺️ ดูข้อมูลพื้นที่</button>
+            <button class="start-btn alt" id="disasterBtn">⚠️ ดูข้อมูลภัยธรรมชาติ</button>
+        </div>
     </section>
 
     <!-- หน้าเลือกภูมิภาค -->
@@ -1301,6 +1563,31 @@
                     <div class="map-loading" id="mapLoading"></div>
                 </div>
                 <div class="info-pane" id="infoPane"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- หน้าภัยธรรมชาติ -->
+    <section id="disasterScreen" class="screen">
+        <div class="map-wrap">
+            <div class="map-top">
+                <button class="back-btn" id="disasterBack">← กลับหน้าแรก</button>
+                <h2 class="d-title">⚠️ ข้อมูลภัยธรรมชาติ</h2>
+            </div>
+
+            <div class="tabs" id="riskTabs">
+                <button data-tab="landslide">⛰️ เสี่ยงดินถล่ม</button>
+                <button data-tab="flood">🌊 เสี่ยงน้ำท่วม</button>
+                <button data-tab="events">📰 เหตุการณ์ที่เกิดขึ้นแล้ว</button>
+            </div>
+
+            <div class="risk-layout">
+                <div class="map-pane">
+                    <div id="riskMap"></div>
+                    <div class="legend" id="riskLegend"></div>
+                    <div class="map-loading hidden" id="riskLoading"></div>
+                </div>
+                <div class="window risk-panel" id="riskPanel"></div>
             </div>
         </div>
     </section>
@@ -2475,6 +2762,12 @@
 
         // เช็คทุก 1 นาที ถ้าข้อมูลที่แสดงอยู่เก่าครบ 20 นาทีแล้วจะดึงใหม่ (ไม่กระพริบหน้าจอ)
         async function refreshLive() {
+            // หน้าภัยธรรมชาติ: ดึงข้อมูลใหม่ทุก 20 นาที
+            if (document.getElementById("disasterScreen").classList.contains("active")) {
+                if (RISK.renderedAt && Date.now() - RISK.renderedAt >= REFRESH_MS) renderRiskTab(true);
+                return;
+            }
+
             const menu = menus.find(m => m.id === state.menu);
             if (!menu || !menu.live || !infoIsVisible()) return;
             if (!state.renderedAt || Date.now() - state.renderedAt < REFRESH_MS) return;
@@ -2496,6 +2789,508 @@
         document.addEventListener("visibilitychange", () => {
             if (!document.hidden) refreshLive();
         });
+
+        // =========================================================
+        // 14) หน้าภัยธรรมชาติ
+        // =========================================================
+        const RISK_LEVELS = [
+            { label: "ปกติ", color: "#66bb6a" },
+            { label: "เฝ้าระวัง", color: "#ffee58" },
+            { label: "เสี่ยงสูง", color: "#ffa726" },
+            { label: "เสี่ยงสูงมาก", color: "#ef5350" }
+        ];
+        const NO_DATA = { label: "ไม่มีข้อมูลแม่น้ำ", color: "#9e9e9e" };
+
+        function levelInfo(level) {
+            return level >= 0 ? RISK_LEVELS[level] : NO_DATA;
+        }
+
+        // จังหวัดที่มีพื้นที่ภูเขาและเคยถูกเตือนภัยดินถล่ม
+        const LANDSLIDE_PRONE = new Set([
+            "เชียงใหม่", "เชียงราย", "พะเยา", "น่าน", "แพร่", "ลำปาง", "ลำพูน", "แม่ฮ่องสอน",
+            "อุตรดิตถ์", "ตาก", "เพชรบูรณ์", "เลย", "หนองคาย", "ศรีสะเกษ", "อุบลราชธานี",
+            "กาญจนบุรี", "ระยอง", "จันทบุรี", "ตราด", "ระนอง", "พังงา", "ภูเก็ต",
+            "กระบี่", "ตรัง", "สตูล", "นครศรีธรรมราช"
+        ]);
+
+        const EVENT_TYPES = {
+            FL: { icon: "🌊", label: "น้ำท่วม", color: "#42a5f5" },
+            TC: { icon: "🌀", label: "พายุหมุนเขตร้อน", color: "#ab47bc" },
+            DR: { icon: "🏜️", label: "ภัยแล้ง", color: "#ffa726" },
+            WF: { icon: "🔥", label: "ไฟป่า", color: "#ef5350" },
+            VO: { icon: "🌋", label: "ภูเขาไฟ", color: "#ff7043" },
+            EQ: { icon: "🌍", label: "แผ่นดินไหว", color: "#8d6e63" }
+        };
+
+        const ALERT_TH = {
+            Green: "ระดับเขียว (ผลกระทบน้อย)",
+            Orange: "ระดับส้ม (ผลกระทบปานกลาง)",
+            Red: "ระดับแดง (ผลกระทบรุนแรง)"
+        };
+
+        const RISK_TABS = {
+            landslide: {
+                title: "⛰️ ความเสี่ยงดินถล่ม",
+                desc: "ประเมินจากปริมาณฝนช่วง 2 วันที่ผ่านมาถึง 2 วันข้างหน้า ร่วมกับว่าจังหวัดนั้นมีพื้นที่ภูเขาที่เคยถูกเตือนภัยดินถล่มหรือไม่ " +
+                      "ฝนมากกว่า 100 มม. ใน 24 ชั่วโมง คือเกณฑ์ที่กรมทรัพยากรธรณีใช้ประกาศเฝ้าระวัง"
+            },
+            flood: {
+                title: "🌊 ความเสี่ยงน้ำท่วม",
+                desc: "เทียบปริมาณน้ำในแม่น้ำใกล้ตัวจังหวัดที่พยากรณ์ไว้ 7 วันข้างหน้า กับระดับน้ำช่วง 1 ปีที่ผ่านมา " +
+                      "ถ้าสูงกว่าระดับที่เกิดไม่บ่อย (สูงสุด 10% ของปี) จะขึ้นเฝ้าระวัง ถ้าสูงกว่าที่เคยสูงสุดในรอบปีจะขึ้นเสี่ยงสูง"
+            },
+            events: {
+                title: "📰 เหตุการณ์ที่เกิดขึ้นแล้ว",
+                desc: "ภัยธรรมชาติในประเทศไทยและพื้นที่ใกล้เคียงช่วง 60 วันที่ผ่านมา ได้แก่ น้ำท่วม พายุ ภัยแล้ง ไฟป่า และแผ่นดินไหว"
+            }
+        };
+
+        const RISK = {
+            tab: "landslide",
+            map: null,
+            layer: null,
+            markers: {},
+            items: [],
+            meta: null,
+            selected: null,
+            token: 0,
+            renderedAt: 0
+        };
+
+        function pad2(n) {
+            return String(n).padStart(2, "0");
+        }
+
+        // วันที่แบบ yyyy-mm-dd นับจากวันนี้ (+ ไปข้างหน้า, - ย้อนหลัง)
+        function dateStr(offsetDays) {
+            const d = new Date(Date.now() + offsetDays * 86400000);
+            return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+        }
+
+        function thDate(value) {
+            return new Date(value).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" });
+        }
+
+        function fmtNum(n) {
+            if (n == null || !isFinite(n)) return "-";
+            return n >= 100 ? Math.round(n).toLocaleString("th-TH") : n.toFixed(1);
+        }
+
+        // จุดกลางของทุกจังหวัด
+        function riskPoints() {
+            const pts = [];
+            regions.forEach(region => {
+                region.provinces.forEach(name => {
+                    const rec = idx.provinceByName[name];
+                    const c = rec && idx.coord["p" + rec.id];
+                    if (c) pts.push({ id: name, name, region, lat: c.lat, lon: c.lon });
+                });
+            });
+            return pts;
+        }
+
+        function multiUrl(base, pts, extra) {
+            return base +
+                "?latitude=" + pts.map(p => p.lat.toFixed(3)).join(",") +
+                "&longitude=" + pts.map(p => p.lon.toFixed(3)).join(",") + extra;
+        }
+
+        function asArray(json) {
+            return Array.isArray(json) ? json : [json];
+        }
+
+        // ----- ดินถล่ม: ฝนรายวัน 5 วัน (ย้อนหลัง 2 วัน + วันนี้ + ล่วงหน้า 2 วัน) -----
+        async function loadLandslide() {
+            const pts = riskPoints();
+            const url = multiUrl("https://api.open-meteo.com/v1/forecast", pts,
+                "&daily=precipitation_sum&past_days=2&forecast_days=3&timezone=Asia%2FBangkok");
+            const raw = await cached(url, () => fetchJSON(url));
+            const data = asArray(raw);
+
+            const items = pts.map((p, i) => {
+                const daily = data[i] && data[i].daily;
+                if (!daily) return { ...p, level: -1, sub: "ไม่มีข้อมูลฝน", details: [] };
+
+                const rain = daily.precipitation_sum.map(v => v || 0);
+                const max24 = Math.max(...rain);
+                let acc3 = 0;
+                for (let j = 0; j + 2 < rain.length; j++) {
+                    acc3 = Math.max(acc3, rain[j] + rain[j + 1] + rain[j + 2]);
+                }
+
+                const prone = LANDSLIDE_PRONE.has(p.name);
+                let level = 0;
+                if (max24 >= 150 || acc3 >= 250) level = 3;
+                else if (max24 >= 100 || acc3 >= 150) level = 2;
+                else if (max24 >= 60 || acc3 >= 90) level = 1;
+                if (!prone) level = Math.min(level, 1); // พื้นที่ราบ ดินถล่มเกิดยาก
+
+                const perDay = daily.time.map((t, j) =>
+                    new Date(t + "T00:00:00").toLocaleDateString("th-TH", { day: "numeric", month: "short" }) +
+                    " " + fmtNum(rain[j]) + " มม.").join(" · ");
+
+                return {
+                    ...p,
+                    level,
+                    sub: "ฝนสูงสุด " + fmtNum(max24) + " มม./วัน · สะสม 3 วัน " + fmtNum(acc3) + " มม.",
+                    details: [
+                        "🌧️ ฝนสูงสุดใน 1 วัน: " + fmtNum(max24) + " มม.",
+                        "💧 ฝนสะสม 3 วันติดกันสูงสุด: " + fmtNum(acc3) + " มม.",
+                        "📅 ฝนรายวัน: " + perDay,
+                        prone ? "⛰️ มีพื้นที่ภูเขาที่เคยถูกเตือนภัยดินถล่ม" : "🏞️ ส่วนใหญ่เป็นพื้นที่ราบ โอกาสเกิดดินถล่มต่ำ"
+                    ]
+                };
+            });
+
+            return { items, fetchedAt: raw._fetchedAt };
+        }
+
+        // ----- น้ำท่วม: ปริมาณน้ำในแม่น้ำ 1 ปีย้อนหลัง + พยากรณ์ 7 วัน -----
+        async function loadFlood() {
+            const pts = riskPoints();
+            const today = dateStr(0);
+            const url = multiUrl("https://flood-api.open-meteo.com/v1/flood", pts,
+                "&daily=river_discharge&start_date=" + dateStr(-365) + "&end_date=" + dateStr(7));
+            const raw = await cached(url, () => fetchJSON(url));
+            const data = asArray(raw);
+
+            const items = pts.map((p, i) => {
+                const daily = data[i] && data[i].daily;
+                const none = { ...p, level: -1, sub: "ไม่พบแม่น้ำในแบบจำลองใกล้ตัวจังหวัด", details: [] };
+                if (!daily || !daily.river_discharge) return none;
+
+                const past = [];
+                const future = [];
+                daily.time.forEach((t, j) => {
+                    const v = daily.river_discharge[j];
+                    if (v == null) return;
+                    (t < today ? past : future).push(v);
+                });
+                if (past.length < 30 || !future.length) return none;
+
+                const sorted = past.slice().sort((a, b) => a - b);
+                const p90 = sorted[Math.floor(0.9 * (sorted.length - 1))];
+                const maxPast = sorted[sorted.length - 1];
+                const now = future[0];
+                const peak = Math.max(...future);
+
+                let level = 0;
+                if (peak > maxPast * 1.2) level = 3;
+                else if (peak > maxPast) level = 2;
+                else if (peak > p90) level = 1;
+
+                let trend = "ทรงตัว";
+                if (peak > now * 1.1) trend = "มีแนวโน้มเพิ่มขึ้น ⬆️";
+                else if (future[future.length - 1] < now * 0.9) trend = "มีแนวโน้มลดลง ⬇️";
+
+                return {
+                    ...p,
+                    level,
+                    sub: "น้ำวันนี้ " + fmtNum(now) + " · สูงสุด 7 วัน " + fmtNum(peak) + " ม³/วินาที",
+                    details: [
+                        "🌊 ปริมาณน้ำในแม่น้ำวันนี้: " + fmtNum(now) + " ลูกบาศก์เมตร/วินาที",
+                        "📈 สูงสุดใน 7 วันข้างหน้า: " + fmtNum(peak) + " ลูกบาศก์เมตร/วินาที (" + trend + ")",
+                        "📊 ระดับน้ำสูง (สูงสุด 10%) ของปีที่ผ่านมา: " + fmtNum(p90),
+                        "🔝 สูงสุดในรอบปีที่ผ่านมา: " + fmtNum(maxPast)
+                    ]
+                };
+            });
+
+            return { items, fetchedAt: raw._fetchedAt };
+        }
+
+        // ----- เหตุการณ์ที่เกิดขึ้นแล้ว: GDACS + แผ่นดินไหวจาก USGS -----
+        function nearThailand(lat, lon) {
+            return lat > 5 && lat < 21 && lon > 97 && lon < 106;
+        }
+
+        async function loadEvents() {
+            const from = dateStr(-60);
+            const to = dateStr(0);
+            const gdacsUrl = "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH" +
+                "?eventlist=FL;TC;DR;WF;VO&fromdate=" + from + "&todate=" + to +
+                "&alertlevel=green;orange;red&country=Thailand";
+            const usgsUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson" +
+                "&starttime=" + from + "&minlatitude=5&maxlatitude=21&minlongitude=97&maxlongitude=106" +
+                "&minmagnitude=2.5&orderby=time";
+
+            const [g, u] = await Promise.allSettled([
+                cached(gdacsUrl, () => fetchJSON(gdacsUrl)),
+                cached(usgsUrl, () => fetchJSON(usgsUrl))
+            ]);
+
+            const items = [];
+            const errors = [];
+
+            if (g.status === "fulfilled") {
+                (g.value.features || []).forEach(f => {
+                    const pr = f.properties || {};
+                    const coords = f.geometry && f.geometry.type === "Point" ? f.geometry.coordinates : null;
+                    const lat = coords ? coords[1] : null;
+                    const lon = coords ? coords[0] : null;
+                    const isThai = String(pr.iso3 || "").includes("THA") ||
+                        String(pr.country || "").includes("Thailand") ||
+                        (lat != null && nearThailand(lat, lon));
+                    if (!isThai) return;
+
+                    const type = EVENT_TYPES[pr.eventtype] || { icon: "⚠️", label: pr.eventtype, color: "#bdbdbd" };
+                    items.push({
+                        id: "g" + pr.eventtype + pr.eventid,
+                        name: type.icon + " " + (pr.name || type.label),
+                        lat, lon,
+                        color: type.color,
+                        badge: type.label,
+                        time: new Date(pr.fromdate).getTime() || 0,
+                        sub: thDate(pr.fromdate) + (pr.todate ? " – " + thDate(pr.todate) : "") +
+                            (pr.country ? " · " + pr.country : ""),
+                        details: [
+                            "📅 ช่วงเวลา: " + thDate(pr.fromdate) + (pr.todate ? " ถึง " + thDate(pr.todate) : ""),
+                            "🚨 ระดับการแจ้งเตือน: " + (ALERT_TH[pr.alertlevel] || pr.alertlevel || "-"),
+                            pr.description ? "📝 " + pr.description : ""
+                        ].filter(Boolean),
+                        link: pr.url && pr.url.report ? pr.url.report : null
+                    });
+                });
+            } else {
+                errors.push("ดึงข้อมูลน้ำท่วม พายุ ภัยแล้ง และไฟป่าจาก GDACS ไม่ได้ในตอนนี้");
+            }
+
+            if (u.status === "fulfilled") {
+                (u.value.features || []).forEach(f => {
+                    const pr = f.properties || {};
+                    const [lon, lat, depth] = f.geometry.coordinates;
+                    items.push({
+                        id: "u" + f.id,
+                        name: "🌍 แผ่นดินไหว ขนาด " + (pr.mag != null ? pr.mag.toFixed(1) : "-"),
+                        lat, lon,
+                        color: EVENT_TYPES.EQ.color,
+                        badge: "แผ่นดินไหว",
+                        time: pr.time,
+                        sub: thDate(pr.time) + " · " + (pr.place || ""),
+                        details: [
+                            "📅 วันเวลา: " + new Date(pr.time).toLocaleString("th-TH"),
+                            "📏 ขนาด: " + (pr.mag != null ? pr.mag.toFixed(1) : "-"),
+                            "⬇️ ความลึก: " + fmtNum(depth) + " กม.",
+                            "📍 บริเวณ: " + (pr.place || "-")
+                        ],
+                        link: pr.url || null
+                    });
+                });
+            } else {
+                errors.push("ดึงข้อมูลแผ่นดินไหวจาก USGS ไม่ได้ในตอนนี้");
+            }
+
+            if (g.status === "rejected" && u.status === "rejected") throw new Error("events");
+
+            items.sort((a, b) => b.time - a.time);
+            return { items, errors, fetchedAt: Date.now() };
+        }
+
+        // ----- แผนที่ของหน้าภัยธรรมชาติ -----
+        function initRiskMap() {
+            if (RISK.map) return;
+            RISK.map = L.map("riskMap", { zoomControl: true }).setView(THAI_CENTER, 6);
+            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(RISK.map);
+            RISK.layer = L.layerGroup().addTo(RISK.map);
+        }
+
+        function setRiskLoading(html) {
+            const box = document.getElementById("riskLoading");
+            box.innerHTML = html || "";
+            box.classList.toggle("hidden", !html);
+        }
+
+        function itemColor(item) {
+            return item.color || levelInfo(item.level).color;
+        }
+
+        function itemBadge(item) {
+            return item.badge || levelInfo(item.level).label;
+        }
+
+        function drawRiskMap() {
+            RISK.layer.clearLayers();
+            RISK.markers = {};
+            RISK.items.forEach(item => {
+                if (item.lat == null) return;
+                const size = item.level >= 2 ? 22 : 17;
+                const marker = L.marker([item.lat, item.lon], { icon: pinIcon(itemColor(item), size) })
+                    .bindTooltip(item.name + " · " + itemBadge(item), { direction: "top", offset: [0, -size], className: "map-tip" })
+                    .on("click", () => selectRiskItem(item.id, false))
+                    .addTo(RISK.layer);
+                RISK.markers[item.id] = marker;
+            });
+
+            const legend = document.getElementById("riskLegend");
+            if (RISK.tab === "events") {
+                const used = Object.values(EVENT_TYPES).filter(t => RISK.items.some(i => i.badge === t.label));
+                legend.innerHTML = used.map(t => `<span><i style="background:${t.color}"></i>${t.label}</span>`).join("");
+            } else {
+                const list = RISK_LEVELS.slice();
+                if (RISK.tab === "flood") list.push(NO_DATA);
+                legend.innerHTML = list.map(l => `<span><i style="background:${l.color}"></i>${l.label}</span>`).join("");
+            }
+        }
+
+        function drawRiskPanel() {
+            const tab = RISK_TABS[RISK.tab];
+            const items = RISK.items;
+            let html = `<h3>${tab.title}</h3><p class="desc">${tab.desc}</p>`;
+
+            // สรุปจำนวนแต่ละระดับ
+            if (RISK.tab !== "events") {
+                const counts = {};
+                items.forEach(i => { counts[i.level] = (counts[i.level] || 0) + 1; });
+                html += '<div class="level-chips">' + [3, 2, 1, 0, -1]
+                    .filter(l => counts[l])
+                    .map(l => `<span class="level-chip"><span class="lv-dot" style="background:${levelInfo(l).color}"></span>${levelInfo(l).label} ${counts[l]} จังหวัด</span>`)
+                    .join("") + "</div>";
+            }
+
+            (RISK.meta.errors || []).forEach(e => {
+                html += `<p class="note" style="color:#ffb74d">⚠️ ${esc(e)}</p>`;
+            });
+
+            // รายละเอียดของรายการที่เลือก
+            const sel = items.find(i => i.id === RISK.selected);
+            if (sel) {
+                html += `<div class="risk-detail">
+                    <h4>${esc(sel.name)} <span class="level-badge" style="background:${itemColor(sel)}">${esc(itemBadge(sel))}</span></h4>
+                    <ul>${sel.details.map(d => `<li>${esc(d)}</li>`).join("")}</ul>
+                    ${RISK.tab === "events"
+                        ? (sel.link ? `<a href="${esc(sel.link)}" target="_blank" rel="noopener">อ่านรายงานฉบับเต็ม →</a>` : "")
+                        : `<button class="skip-btn" data-goto="${esc(sel.name)}">📍 ดูข้อมูลพื้นที่ของจังหวัดนี้</button>`}
+                </div>`;
+            }
+
+            // รายการทั้งหมด (เสี่ยงมากอยู่บน)
+            if (!items.length) {
+                html += `<div class="risk-empty">ไม่พบเหตุการณ์ในประเทศไทยช่วง 60 วันที่ผ่านมา 🌿</div>`;
+            } else {
+                const list = RISK.tab === "events" ? items
+                    : items.slice().sort((a, b) => b.level - a.level || a.name.localeCompare(b.name, "th"));
+                html += '<div class="risk-list">' + list.map(i => `
+                    <button class="risk-row${i.id === RISK.selected ? " selected" : ""}" data-id="${esc(i.id)}">
+                        <span class="lv-dot" style="background:${itemColor(i)}"></span>
+                        <span class="r-main">
+                            <div class="r-name">${esc(i.name)}</div>
+                            <div class="r-sub">${esc(i.sub)}</div>
+                        </span>
+                        <span class="level-badge" style="background:${itemColor(i)}">${esc(itemBadge(i))}</span>
+                    </button>`).join("") + "</div>";
+            }
+
+            // แหล่งข้อมูล
+            const sources = {
+                landslide: 'ข้อมูลฝนจาก <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> · ' +
+                    'ประกาศเตือนภัยทางการดูได้ที่ <a href="https://www.dmr.go.th/" target="_blank" rel="noopener">กรมทรัพยากรธรณี</a>',
+                flood: 'ข้อมูลแม่น้ำจากแบบจำลอง GloFAS ผ่าน <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> · ' +
+                    'ดูระดับน้ำจริงจากสถานีที่ <a href="https://www.thaiwater.net/" target="_blank" rel="noopener">ThaiWater</a>',
+                events: 'ข้อมูลจาก <a href="https://www.gdacs.org/" target="_blank" rel="noopener">GDACS</a> และ ' +
+                    '<a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener">USGS</a>'
+            };
+            const disclaimer = RISK.tab === "events"
+                ? "* ข้อมูลภัยขนาดเล็กหรือเหตุการณ์เฉพาะพื้นที่อาจไม่ปรากฏในรายการนี้"
+                : "* เป็นการประเมินเบื้องต้นจากข้อมูลแบบจำลอง ไม่ใช่ประกาศเตือนภัยอย่างเป็นทางการ";
+            html += `<p class="note">${liveNote({ _fetchedAt: RISK.meta.fetchedAt })}${sources[RISK.tab]}<br>${disclaimer}</p>`;
+
+            document.getElementById("riskPanel").innerHTML = html;
+        }
+
+        function selectRiskItem(id, fromList) {
+            RISK.selected = id;
+            Object.entries(RISK.markers).forEach(([key, m]) => {
+                const el = m.getElement();
+                if (el) el.classList.toggle("selected", key === id);
+            });
+            const item = RISK.items.find(i => i.id === id);
+            if (item && item.lat != null && fromList) {
+                RISK.map.flyTo([item.lat, item.lon], Math.max(RISK.map.getZoom(), 8), { duration: 0.6 });
+            }
+            drawRiskPanel();
+            document.getElementById("riskPanel").scrollTop = 0;
+        }
+
+        async function renderRiskTab(silent) {
+            const tabKey = RISK.tab;
+            const token = ++RISK.token;
+
+            if (!silent) {
+                RISK.selected = null;
+                setRiskLoading('<div class="loading"><span class="spinner"></span>กำลังโหลดข้อมูล...</div>');
+                document.getElementById("riskPanel").innerHTML =
+                    `<h3>${RISK_TABS[tabKey].title}</h3><div class="loading"><span class="spinner"></span>กำลังประเมินทุกจังหวัด...</div>`;
+            }
+
+            try {
+                if (tabKey !== "events") {
+                    await loadGeo();
+                    buildIndex();
+                }
+                const result = tabKey === "landslide" ? await loadLandslide()
+                    : tabKey === "flood" ? await loadFlood()
+                    : await loadEvents();
+
+                if (token !== RISK.token) return;
+                RISK.items = result.items;
+                RISK.meta = result;
+                setRiskLoading("");
+                drawRiskMap();
+                drawRiskPanel();
+                if (RISK.selected) selectRiskItem(RISK.selected, false);
+                RISK.renderedAt = Date.now();
+            } catch (err) {
+                if (token !== RISK.token || silent) return;
+                setRiskLoading(`<div class="error-box">โหลดข้อมูลไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่<br>
+                    <button class="ghost-btn" id="riskRetry">ลองใหม่</button></div>`);
+                document.getElementById("riskRetry").addEventListener("click", () => renderRiskTab(false));
+                document.getElementById("riskPanel").innerHTML =
+                    `<h3>${RISK_TABS[tabKey].title}</h3><div class="risk-empty">ยังโหลดข้อมูลไม่ได้</div>`;
+            }
+        }
+
+        function switchRiskTab(tab) {
+            RISK.tab = tab;
+            document.querySelectorAll("#riskTabs button").forEach(b => {
+                b.classList.toggle("active", b.dataset.tab === tab);
+            });
+            renderRiskTab(false);
+        }
+
+        function openDisaster() {
+            showScreen("disasterScreen");
+            initRiskMap();
+            [100, 400].forEach(ms => setTimeout(() => RISK.map.invalidateSize(), ms));
+            RISK.map.setView(THAI_CENTER, 6);
+            switchRiskTab(RISK.tab);
+        }
+
+        // ไปหน้าข้อมูลพื้นที่ของจังหวัดที่เลือก
+        function goToProvince(name) {
+            state.region = regionOf(name);
+            selectProvince(name);
+        }
+
+        document.getElementById("riskPanel").addEventListener("click", e => {
+            const go = e.target.closest("[data-goto]");
+            if (go) return goToProvince(go.dataset.goto);
+            const row = e.target.closest("[data-id]");
+            if (row) selectRiskItem(row.dataset.id, true);
+        });
+
+        document.querySelectorAll("#riskTabs button").forEach(b => {
+            b.addEventListener("click", () => switchRiskTab(b.dataset.tab));
+        });
+
+        document.getElementById("disasterBtn").addEventListener("click", () => {
+            openDisaster();
+            loadGeo().catch(() => {});
+        });
+
+        document.getElementById("disasterBack").addEventListener("click", () => showScreen("home"));
 
         // =========================================================
         // 13) ผูกปุ่มต่าง ๆ
